@@ -1,7 +1,7 @@
 # epa-evosuite
-EVOSUITE test generator extension for EPA Coverage. You can find original version in https://github.com/crazy2k/evosuite
+EVOSUITE test generator extension for EPA Coverage.
 
-# Prerequisite
+# Prerequisites
 - [Maven](https://maven.apache.org/download.cgi)
 - [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
