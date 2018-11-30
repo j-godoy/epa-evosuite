@@ -307,12 +307,13 @@ public class TestSuiteWriter implements Opcodes {
             if(result.noThrownExceptions())
                 continue;
             int exceptionPosition = result.getFirstPositionOfThrownException();
-            Statement st = null;
-            try
-            {
-            	st = result.test.getStatement(exceptionPosition);
-            } catch(Exception e) { continue; }
-            st.removeAssertions();
+            result.test.getStatement(exceptionPosition).removeAssertions();
+//            Statement st = null;
+//            try
+//            {
+//            	st = result.test.getStatement(exceptionPosition);
+//            } catch(Exception e) { continue; }
+//            st.removeAssertions();
         }
     }
 
