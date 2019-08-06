@@ -570,4 +570,9 @@ public class EPAMonitor {
 		return this.previousEpaState.containsKey(obj);
 	}
 
+	public String getEPAActionName(String fullMethodName)
+	{
+		return this.constructorToActionMap.get(fullMethodName) == null ? methodToActionMap.get(fullMethodName) : constructorToActionMap.get(fullMethodName);
+	}
+
 }

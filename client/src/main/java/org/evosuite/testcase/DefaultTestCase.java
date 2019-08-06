@@ -24,19 +24,12 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.evosuite.assertion.Assertion;
 import org.evosuite.contracts.ContractViolation;
+import org.evosuite.coverage.epa.EPAState;
 import org.evosuite.ga.ConstructionFailedException;
 import org.evosuite.runtime.util.Inputs;
 import org.evosuite.setup.TestClusterUtils;
@@ -359,6 +352,7 @@ public class DefaultTestCase implements TestCase, Serializable {
 		t.accessedEnvironment.copyFrom(accessedEnvironment);
 		t.isFailing = isFailing;
 		t.id = idGenerator.getAndIncrement(); //always create new ID when making a clone
+		t.EPAStateInStatement = new HashMap<>(this.EPAStateInStatement);
 		//t.exception_statement = exception_statement;
 		//t.exceptionThrown = exceptionThrown;
 		return t;
@@ -1075,5 +1069,20 @@ public class DefaultTestCase implements TestCase, Serializable {
 	@Override
 	public String toString() {
 		return toCode();
+	}
+
+	Map<Statement, EPAState> EPAStateInStatement = new HashMap<>();;
+
+	public void setEPAStateInStatement(Map<Statement, EPAState> EPAStateInStatement) {
+		this.EPAStateInStatement = EPAStateInStatement;
+	}
+
+	public EPAState getEPAStateInStatement(Statement s) {
+		return this.EPAStateInStatement.get(s);
+	}
+
+	@Override
+	public Map<Statement, EPAState> getMapStatementEPAState() {
+		return this.EPAStateInStatement;
 	}
 }

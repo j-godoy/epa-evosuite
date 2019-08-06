@@ -41,6 +41,7 @@ import org.evosuite.testcase.variable.VariableReference;
 import org.evosuite.testsuite.CurrentChromosomeTracker;
 import org.evosuite.testsuite.TestSuiteFitnessFunction;
 import org.evosuite.utils.Randomness;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -301,6 +302,7 @@ public class TestChromosome extends ExecutableChromosome {
 		}
 
 		int lastPosition = getLastMutatableStatement();
+		//TODO JAVICOMENT:: porque no corta siempre el test hasta donde se lanza la primer excepcion?
 		if(Properties.CHOP_MAX_LENGTH && size() >= Properties.CHROMOSOME_LENGTH) {
 			test.chop(lastPosition + 1);
 		}
@@ -537,6 +539,7 @@ public class TestChromosome extends ExecutableChromosome {
 	 * @return
 	 */
 	private boolean mutationInsert() {
+		TestFactory.mutate = true;
 		boolean changed = false;
 		final double ALPHA = Properties.P_STATEMENT_INSERTION; //0.5;
 		int count = 0;
@@ -556,6 +559,7 @@ public class TestChromosome extends ExecutableChromosome {
 				        test.getStatement(position)));
 			}
 		}
+		TestFactory.mutate = false;
 		return changed;
 	}
 

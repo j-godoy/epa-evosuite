@@ -587,6 +587,9 @@ public class Properties {
 	@Parameter(key = "crossover_function", group = "Search Algorithm", description = "Crossover function during search")
 	public static CrossoverFunction CROSSOVER_FUNCTION = CrossoverFunction.SINGLEPOINTRELATIVE;
 
+	@Parameter(key = "epa_mutation", group = "EPA", description = "Looking for cover new goals in epa criteria")
+	public static boolean EPA_MUTATION = false;
+
 	public enum TheReplacementFunction {
 		/**
 		 * Indicates a replacement function which works for all chromosomes
@@ -2212,7 +2215,7 @@ public class Properties {
 	 *            a {@link java.lang.String} object.
 	 * @param value
 	 *            an array of {@link java.lang.String} objects.
-	 * @throws org.evosuite.Properties#NoSuchParameterException
+	 * @throws org.evosuite.Properties.NoSuchParameterException
 	 *             if any.
 	 * @throws java.lang.IllegalArgumentException
 	 *             if any.

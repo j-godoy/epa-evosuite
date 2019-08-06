@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.evosuite.assertion.Assertion;
 import org.evosuite.contracts.ContractViolation;
+import org.evosuite.coverage.epa.EPAState;
 import org.evosuite.ga.ConstructionFailedException;
 import org.evosuite.testcase.statements.Statement;
 import org.evosuite.testcase.statements.environment.AccessedEnvironment;
@@ -507,5 +508,10 @@ public interface TestCase extends Iterable<Statement>, Cloneable,
 	 * @param exceptions a {@link java.util.Map} object.
 	 */
 	public String toCode(Map<Integer, Throwable> exceptions);
-	
+
+	public void setEPAStateInStatement(Map<Statement, EPAState> EPAStateInStatement);
+
+	public EPAState getEPAStateInStatement(Statement s);
+	public Map<Statement, EPAState> getMapStatementEPAState();
+
 }

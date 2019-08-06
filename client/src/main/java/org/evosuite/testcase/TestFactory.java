@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.ClassUtils;
 import org.evosuite.Properties;
 import org.evosuite.TimeController;
+import org.evosuite.coverage.FitnessFunctions;
+import org.evosuite.coverage.epa.*;
 import org.evosuite.ga.ConstructionFailedException;
 import org.evosuite.runtime.annotation.Constraints;
 import org.evosuite.runtime.javaee.injection.Injector;
@@ -47,6 +49,7 @@ import org.evosuite.seeding.CastClassManager;
 import org.evosuite.seeding.ObjectPoolManager;
 import org.evosuite.setup.TestCluster;
 import org.evosuite.setup.TestUsageChecker;
+import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testcase.jee.InjectionSupport;
 import org.evosuite.testcase.jee.InstanceOnlyOnce;
 import org.evosuite.testcase.jee.ServletSupport;
@@ -2082,7 +2085,7 @@ public class TestFactory {
 		return -1;
 	}
 
-
+	public static boolean mutate = false;
 	/**
 	 * Insert a random call for the UUT at the given position
 	 *
@@ -2106,7 +2109,11 @@ public class TestFactory {
 				return insertRandomReflectionCall(test,position, 0);
             }
 
-			GenericAccessibleObject<?> o = TestCluster.getInstance().getRandomTestCall();
+			GenericAccessibleObject<?> o = null;
+            if(Properties.EPA_MUTATION && mutate)
+				o = TestCluster.getInstance().getRandomTestCallMutation(test, position);
+            else
+				o = TestCluster.getInstance().getRandomTestCall();
 			if (o == null) {
 				logger.warn("Have no target methods to test");
 				return false;
@@ -2169,6 +2176,7 @@ public class TestFactory {
 
 			return true;
 		} catch (ConstructionFailedException e) {
+			mutate = false;
 			// TODO: Check this! - TestCluster replaced
 			// TestCluster.getInstance().checkDependencies(o);
 			logger.debug("Inserting statement {} has failed. Removing statements: {}",name, e);

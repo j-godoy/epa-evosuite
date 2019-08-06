@@ -22,21 +22,24 @@ package org.evosuite.testcase.execution;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.sql.Array;
+import java.util.*;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.evosuite.PackageInfo;
 import org.evosuite.Properties;
+import org.evosuite.coverage.epa.EPAMonitor;
+import org.evosuite.coverage.epa.EPAState;
+import org.evosuite.coverage.epa.EPATrace;
+import org.evosuite.coverage.epa.EPATransition;
 import org.evosuite.runtime.Runtime;
 import org.evosuite.runtime.System.SystemExitException;
 import org.evosuite.runtime.jvm.ShutdownHookHandler;
 import org.evosuite.runtime.thread.KillSwitch;
 import org.evosuite.runtime.thread.ThreadStopper;
+import org.evosuite.testcase.statements.ConstructorStatement;
+import org.evosuite.testcase.statements.MethodStatement;
 import org.evosuite.testcase.statements.Statement;
 import org.evosuite.testcase.TestCase;
 import org.evosuite.utils.LoggingUtils;
@@ -208,7 +211,7 @@ public class TestRunnable implements InterfaceTestRunnable {
 			if(Properties.REPLACE_CALLS){
 				ShutdownHookHandler.getInstance().initHandler();
 			}
-			
+			this.EPAStateInStatement = test.getMapStatementEPAState();
 			executeStatements(result, out, num);
 		} catch (ThreadDeath e) {// can't stop these guys
 			logger.info("Found error in " + test.toCode(), e);
@@ -264,7 +267,8 @@ public class TestRunnable implements InterfaceTestRunnable {
 		result.setThrownExceptions(exceptionsThrown);
 		result.setReadProperties(org.evosuite.runtime.System.getAllPropertiesReadSoFar());
 		result.setWasAnyPropertyWritten(org.evosuite.runtime.System.wasAnyPropertyWritten());
-		
+		test.setEPAStateInStatement(this.EPAStateInStatement);
+
 		return result;
 	}
 
@@ -325,6 +329,7 @@ public class TestRunnable implements InterfaceTestRunnable {
 					result.setThrownExceptions(exceptionsThrown);
 					result.reportNewThrownException(test.size(), exceptionThrown);
 					result.setTrace(ExecutionTracer.getExecutionTracer().getTrace());
+					setEPAStateInStatement(test, num.get());
 					break;
 				}
 
@@ -358,13 +363,43 @@ public class TestRunnable implements InterfaceTestRunnable {
 				logger.debug("Done statement " + s.getCode());
 			}
 
-			informObservers_after(s, exceptionThrown);
+			setEPAStateInStatement(test, num.get());
 
+			informObservers_after(s, exceptionThrown);
 			num.incrementAndGet();
 		} // end of loop
 		informObservers_finished(result);
 		//TODO
 	}
+
+	private void setEPAStateInStatement(TestCase test, int num)
+	{
+		if(Arrays.stream(Properties.CRITERION).noneMatch(c-> c.name().contains("epa")))
+			return;
+
+		Statement statement = test.getStatement(num);
+		if(!(statement instanceof ConstructorStatement || statement instanceof MethodStatement))
+			return;
+		if(ExecutionTracer.getExecutionTracer().getTraceNoFinishCalls() != null) {
+			String currActionName = statement instanceof ConstructorStatement ? ((ConstructorStatement)statement).getConstructor().getNameWithDescriptor() : ((MethodStatement)statement).getMethod().getNameWithDescriptor();
+			currActionName = EPAMonitor.getInstance().getEPAActionName(currActionName);
+			//TODO guardar solamente el estado donde termina la traza de la epa
+			// Si hay otras transiciones, deben ser de ejecuciones de statements anteriores
+			Set<EPATrace> traceSet = ExecutionTracer.getExecutionTracer().getTraceNoFinishCalls().getEPATraces();
+			for(EPATrace trace : traceSet)
+			{
+				EPATransition transition = trace.getEpaTransitions().get(trace.getEpaTransitions().size()-1);
+				String traceActionName = transition.getActionName();
+				if(traceActionName.equals(currActionName))
+				{
+					EPAState epaState = transition.getDestinationState();
+					EPAStateInStatement.put(statement, epaState);
+					break;
+				}
+			}
+		}
+	}
+	Map<Statement, EPAState> EPAStateInStatement = new HashMap<>();;
 
 	private void printDebugInfo(Statement s, Throwable exceptionThrown) {
 		// some debugging info

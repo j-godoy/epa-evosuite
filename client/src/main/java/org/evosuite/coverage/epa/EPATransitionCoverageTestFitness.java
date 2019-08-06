@@ -86,4 +86,8 @@ public class EPATransitionCoverageTestFitness extends TestFitnessFunction {
 	public boolean isGoalError() {
 		return goal.isError();
 	}
+
+	public EPATransitionCoverageGoal getGoal() {
+		return goal;
+	}
 }

@@ -500,5 +500,4 @@ public class ExecutionResult implements Cloneable {
 	public Map<Integer, Set<OutputCoverageGoal>> getOutputGoals() {
 		return outputGoals;
 	}
-
 }

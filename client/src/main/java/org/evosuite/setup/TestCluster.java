@@ -28,9 +28,14 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
 import org.evosuite.Properties;
 import org.evosuite.TestGenerationContext;
+import org.evosuite.coverage.FitnessFunctions;
+import org.evosuite.coverage.epa.*;
 import org.evosuite.ga.ConstructionFailedException;
+import org.evosuite.ga.FitnessFunction;
 import org.evosuite.junit.CoverageAnalysis;
 import org.evosuite.runtime.util.AtMostOnceLogger;
 import org.evosuite.runtime.util.Inputs;
@@ -38,7 +43,11 @@ import org.evosuite.seeding.CastClassManager;
 import org.evosuite.testcase.ConstraintHelper;
 import org.evosuite.testcase.ConstraintVerifier;
 import org.evosuite.testcase.TestCase;
+import org.evosuite.testcase.execution.ExecutionResult;
+import org.evosuite.testcase.execution.ExecutionTrace;
+import org.evosuite.testcase.execution.TestCaseExecutor;
 import org.evosuite.testcase.jee.InstanceOnlyOnce;
+import org.evosuite.testcase.statements.Statement;
 import org.evosuite.testcase.variable.VariableReference;
 import org.evosuite.utils.generic.GenericAccessibleObject;
 import org.evosuite.utils.generic.GenericClass;
@@ -1189,20 +1198,71 @@ public class TestCluster {
 		return environmentMethods.size();
 	}
 
+
+
+	public GenericAccessibleObject<?> getRandomTestCallMutation(TestCase test, int position)
+			throws ConstructionFailedException {
+
+		if (testMethods.isEmpty()) {
+			logger.debug("No more calls");
+			// TODO: return null, or throw ConstructionFailedException?
+			return null;
+		}
+
+		GenericAccessibleObject<?> choice = Randomness.choice(testMethods);
+		if(!test.isEmpty()) {
+
+			Statement statement = test.getStatement(position-1);
+			EPAState currEpaState = test.getEPAStateInStatement(statement);
+			if(currEpaState == null)
+			{
+				ExecutionResult result = TestCaseExecutor.runTest(test);
+				if(result != null && !result.noThrownExceptions() && result.getFirstPositionOfThrownException() < position)
+					position = result.getFirstPositionOfThrownException();
+				statement = test.getStatement(position-1);
+				currEpaState = test.getEPAStateInStatement(statement);
+			}
+			if(currEpaState != null)
+			{
+				Properties.Criterion criteria = Properties.Criterion.EPATRANSITION;
+				if(Arrays.stream(Properties.CRITERION).anyMatch(c->c.equals(criteria)))
+				{
+					Set<GenericAccessibleObject<?>> testMethods_non_covered = new LinkedHashSet<>();
+					EPATransitionCoverageSuiteFitness fitnessFunction = (EPATransitionCoverageSuiteFitness) FitnessFunctions.getFitnessFunction(Properties.Criterion.EPATRANSITION);
+					Collection<EPATransitionCoverageTestFitness> nonCoveredGoals = fitnessFunction.getNonCoverageGoalMap().values();
+					for (EPATransitionCoverageTestFitness nonCoveredGoal : nonCoveredGoals) {
+						EPATransition epaTransition = nonCoveredGoal.getGoal().getEPATransition();
+						if (epaTransition.getOriginState().equals(currEpaState)) {
+							testMethods_non_covered.addAll(testMethods.stream().filter(t -> t.getName().equalsIgnoreCase(epaTransition.getActionName())).collect(Collectors.toSet()));
+						}
+					}
+					if(!testMethods_non_covered.isEmpty())
+						choice = Randomness.choice(testMethods_non_covered);
+				}
+			}
+		}
+		return getRandomTestCall(choice);
+	}
+
+	public GenericAccessibleObject<?> getRandomTestCall()
+			throws ConstructionFailedException {
+		if (testMethods.isEmpty()) {
+			logger.debug("No more calls");
+			// TODO: return null, or throw ConstructionFailedException?
+			return null;
+		}
+		GenericAccessibleObject<?> choice = Randomness.choice(testMethods);
+		return getRandomTestCall(choice);
+	}
+
 	/**
 	 * Get random method or constructor of unit under test
 	 *
 	 * @return
 	 * @throws ConstructionFailedException
 	 */
-	public GenericAccessibleObject<?> getRandomTestCall()
-	        throws ConstructionFailedException {
-		if(testMethods.isEmpty()) {
-			logger.debug("No more calls");
-			// TODO: return null, or throw ConstructionFailedException?
-			return null;
-		}
-		GenericAccessibleObject<?> choice = Randomness.choice(testMethods);
+	private GenericAccessibleObject<?> getRandomTestCall(GenericAccessibleObject<?> choice)
+			throws ConstructionFailedException {
 		logger.debug("Chosen call: " + choice);
 		if (choice.getOwnerClass().hasWildcardOrTypeVariables()) {
 			GenericClass concreteClass = choice.getOwnerClass().getGenericInstantiation();
@@ -1221,8 +1281,6 @@ public class TestCluster {
 		}
 		return choice;
 	}
-
-
 
 	public int getNumTestCalls() {
 		return testMethods.size();
