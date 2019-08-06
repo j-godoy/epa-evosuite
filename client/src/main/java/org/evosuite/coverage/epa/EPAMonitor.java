@@ -231,7 +231,8 @@ public class EPAMonitor {
 				throw new IllegalStateException("EPA_XML_PATH should be configured before creating EPAMonitor!");
 			}
 			try {
-				if (Properties.EPA_XML_PATH != null) {
+				if (Properties.EPA_XML_PATH != null &&
+						!ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPAMINING)) {
 					final EPA automata = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 					instance = new EPAMonitor(automata);
 				} else {
