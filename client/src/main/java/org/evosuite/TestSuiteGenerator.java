@@ -261,6 +261,33 @@ public class TestSuiteGenerator {
 			ClientServices.getInstance().getClientNode().trackOutputVariable(RuntimeVariable.Minimized_Length,
 					testSuite.totalLengthOfTestCases());
 		}
+		
+		//Debe generar el xml de la epa antes de llamar a analyzeCoverage porque pierde la instrumentación para
+		// tener los callbacks a EPAMonitor
+		if (ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)) {
+			if (Properties.INFERRED_EPA_XML_PATH != null) {
+				Set<EPATrace> traces = new HashSet<EPATrace>();
+				for (TestChromosome test : testSuite.getTestChromosomes()) {
+					// delete all statements leading to security exceptions
+					ExecutionResult result = test.getLastExecutionResult();
+					if (result == null) {
+						result = TestCaseExecutor.runTest(test.getTestCase());
+					}
+					Set<EPATrace> resultTraces = result.getTrace().getEPATraces();
+					traces.addAll(resultTraces);
+				}
+				try {
+					EPA inferredAutomata = EPAFactory.buildEPA(traces);
+					EPAXMLPrinter xmlPrinter = new EPAXMLPrinter();
+					String xmlFilename = Properties.INFERRED_EPA_XML_PATH;
+					String epa_xml_str = xmlPrinter.toXML(inferredAutomata);
+					FileIOUtils.writeFile(epa_xml_str, xmlFilename);
+
+				} catch (MalformedEPATraceException e) {
+					throw new EvosuiteError(e);
+				}
+			}
+		}
 
 		if (Properties.COVERAGE) {
 			ClientServices.getInstance().getClientNode().changeState(ClientState.COVERAGE_ANALYSIS);
@@ -351,31 +378,6 @@ public class TestSuiteGenerator {
 			RegressionTestSuiteSerialization.performRegressionAnalysis(testSuite);
 		}
 
-		if (ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)) {
-
-			if (Properties.INFERRED_EPA_XML_PATH != null) {
-				Set<EPATrace> traces = new HashSet<EPATrace>();
-				for (TestChromosome test : testSuite.getTestChromosomes()) {
-					// delete all statements leading to security exceptions
-					ExecutionResult result = test.getLastExecutionResult();
-					if (result == null) {
-						result = TestCaseExecutor.runTest(test.getTestCase());
-					}
-					Set<EPATrace> resultTraces = result.getTrace().getEPATraces();
-					traces.addAll(resultTraces);
-				}
-				try {
-					EPA inferredAutomata = EPAFactory.buildEPA(traces);
-					EPAXMLPrinter xmlPrinter = new EPAXMLPrinter();
-					String xmlFilename = Properties.INFERRED_EPA_XML_PATH;
-					String epa_xml_str = xmlPrinter.toXML(inferredAutomata);
-					FileIOUtils.writeFile(epa_xml_str, xmlFilename);
-
-				} catch (MalformedEPATraceException e) {
-					throw new EvosuiteError(e);
-				}
-			}
-		}
 	}
 
 	/**
