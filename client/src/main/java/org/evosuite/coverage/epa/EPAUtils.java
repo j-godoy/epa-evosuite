@@ -165,10 +165,10 @@ public class EPAUtils {
 				if (epaActionPreconditionAnnotation != null) {
 					String actionId = getEpaActionAnnotationName(epaActionPreconditionAnnotation);
 					if (actionId == null) {
-						throw new EvosuiteError("name field was not found in an @EpaAction annotation");
+						throw new EvosuiteError("name field was not found in an @EpaActionPrecondition annotation");
 					}
 					if (epaActionPreconditionMethodsMap.containsKey(actionId)) {
-						throw new EvosuiteError("Found repeated precondition methods for action " + actionId);
+						throw new EvosuiteError("Found repeated @EpaActionPrecondition methods for action " + actionId);
 					}
 					epaActionPreconditionMethodsMap.put(actionId, method);
 				}
