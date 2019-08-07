@@ -226,7 +226,11 @@ public class TestGenerationContext {
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)) {
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.LINE)
+                || ArrayUtil.contains(Properties.CRITERION, Criterion.BRANCH)
+                || ArrayUtil.contains(Properties.CRITERION, Criterion.EXCEPTION)
+                ) {
 			EPAMonitor.reset();
 		}
 	}

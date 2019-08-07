@@ -220,19 +220,22 @@ public class EPAMonitor {
 	 * This map keeps the last EPA state observed for each object
 	 */
 	private final IdentityHashMap<Object, EPAState> previousEpaState = new IdentityHashMap<>();
+	
+	private static boolean requireEPAXML()
+	{
+		return ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPATRANSITION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES);
+	}
 
 	public static EPAMonitor getInstance() {
 		if (instance == null) {
-			if ((ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPATRANSITION)
-					|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
-					|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
-					|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES))
-					&& Properties.EPA_XML_PATH == null) {
+			if (requireEPAXML() && Properties.EPA_XML_PATH == null) {
 				throw new IllegalStateException("EPA_XML_PATH should be configured before creating EPAMonitor!");
 			}
 			try {
-				if (Properties.EPA_XML_PATH != null &&
-						!ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPAMINING)) {
+				if (Properties.EPA_XML_PATH != null && requireEPAXML()) {
 					final EPA automata = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 					instance = new EPAMonitor(automata);
 				} else {

@@ -265,7 +265,7 @@ public class TestSuiteGenerator {
 		
 		//Debe generar el xml de la epa antes de llamar a analyzeCoverage porque pierde la instrumentación para
 		// tener los callbacks a EPAMonitor
-		if (ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)) {
+		//if (ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)) {
 			if (Properties.INFERRED_EPA_XML_PATH != null) {
 				Set<EPATrace> traces = new HashSet<EPATrace>();
 				for (TestChromosome test : testSuite.getTestChromosomes()) {
@@ -290,7 +290,7 @@ public class TestSuiteGenerator {
 					throw new EvosuiteError(e);
 				}
 			}
-		}
+		//}
 
 		if (Properties.COVERAGE) {
 			ClientServices.getInstance().getClientNode().changeState(ClientState.COVERAGE_ANALYSIS);
