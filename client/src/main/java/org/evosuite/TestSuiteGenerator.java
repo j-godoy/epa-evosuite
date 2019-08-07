@@ -36,6 +36,7 @@ import org.evosuite.coverage.branch.Branch;
 import org.evosuite.coverage.branch.BranchPool;
 import org.evosuite.coverage.dataflow.DefUseCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPA;
+import org.evosuite.coverage.epa.EPADotPrinter;
 import org.evosuite.coverage.epa.EPAFactory;
 import org.evosuite.coverage.epa.EPATrace;
 import org.evosuite.coverage.epa.EPAXMLPrinter;
@@ -282,7 +283,9 @@ public class TestSuiteGenerator {
 					String xmlFilename = Properties.INFERRED_EPA_XML_PATH;
 					String epa_xml_str = xmlPrinter.toXML(inferredAutomata);
 					FileIOUtils.writeFile(epa_xml_str, xmlFilename);
-
+					EPADotPrinter printer = new EPADotPrinter();
+					String dot_str = printer.toDot(inferredAutomata);
+					FileIOUtils.writeFile(dot_str, xmlFilename.replace(".xml", ".dot"));
 				} catch (MalformedEPATraceException e) {
 					throw new EvosuiteError(e);
 				}
