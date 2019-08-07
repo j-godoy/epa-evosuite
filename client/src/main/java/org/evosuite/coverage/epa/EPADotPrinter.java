@@ -1,7 +1,6 @@
 package org.evosuite.coverage.epa;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,10 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.xml.sax.SAXException;
 
 public class EPADotPrinter {
@@ -142,7 +138,7 @@ public class EPADotPrinter {
 	 * @return
 	 */
 	private static String escapeStateId(String stateId) {
-		return stateId.replace("[", "").replace("]", "").replace("=", "").replace(",", "");
+		return stateId.replace("[", "").replace("]", "").replace("=", "").replace(",", "_");
 	}
 
 	public static void main(String[] args) {
