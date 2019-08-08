@@ -250,4 +250,21 @@ public class EPAUtils {
 		}
 		return constructors;
 	}
+	
+	public static void checkActionAndPreconditionsAnnotationsForEpaMining(Map<String, Set<Method>> actionMethodsMap,
+			Map<String, Method> preconditionMethodsMap) throws EvosuiteError {
+		for (String actionId : actionMethodsMap.keySet()) {
+			if (!preconditionMethodsMap.containsKey(actionId)) {
+				throw new EvosuiteError("@EpaActionPrecondition annotation missing for action " + actionId);
+			}
+		}
+
+		for (String actionId : preconditionMethodsMap.keySet()) {
+			if (!actionMethodsMap.containsKey(actionId)) {
+				throw new EvosuiteError("Missing @EpaAction annotation for action " + actionId);
+			}
+		}
+	}
+	
+	public static String EXCEPTION_SUFFIX_ACTION_ID = "EXCEP_";
 }
