@@ -19,7 +19,6 @@
  */
 package org.evosuite.coverage.epa;
 
-import org.evosuite.coverage.exception.ExceptionCoverageTestFitness;
 import org.evosuite.testcase.*;
 import org.evosuite.testcase.execution.ExecutionResult;
 
@@ -92,10 +91,15 @@ public class EPAMiningCoverageTestFitness extends TestFitnessFunction {
 
 		for (EPATrace epa_trace : result.getTrace().getEPATraces()) {
 			for (EPATransition epa_transition : epa_trace.getEpaTransitions()) {
+				if(!(epa_transition instanceof EPANormalTransition)) {
+					break;
+				}
+				
 				EPAState epa_transition_destination = epa_transition.getDestinationState();
 				if (epa_transition_destination.equals(EPAState.INVALID_OBJECT_STATE)) {
 					break;
 				}
+				
 				EPAState epa_transition_origin = epa_transition.getOriginState();
 				String epa_transition_actionId = epa_transition.getActionName();
 				if (epa_transition_origin.equals(this.fromState) && epa_transition_actionId.equals(this.actionId)

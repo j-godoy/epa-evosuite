@@ -29,7 +29,6 @@ import java.util.Set;
 import org.evosuite.Properties;
 import org.evosuite.TestGenerationContext;
 import org.evosuite.coverage.archive.TestsArchive;
-import org.evosuite.coverage.exception.ExceptionCoverageFactory;
 import org.evosuite.testcase.ExecutableChromosome;
 import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionResult;
@@ -65,7 +64,7 @@ public class EPAMiningCoverageSuiteFitness extends TestSuiteFitnessFunction {
 		Map<String, Set<Method>> actionMethodsMap = EPAUtils.getEpaActionMethods(targetClass);
 		Map<String, Method> preconditionMethodsMap = EPAUtils.getEpaActionPreconditionMethods(targetClass);
 
-		checkActionAndPreconditionsAnnotations(actionMethodsMap, preconditionMethodsMap);
+		EPAUtils.checkActionAndPreconditionsAnnotationsForEpaMining(actionMethodsMap, preconditionMethodsMap);
 
 		Set<String> actionIds = new HashSet<String>(actionMethodsMap.keySet());
 		actionIds.addAll(actionConstructorMap.keySet());
@@ -155,18 +154,4 @@ public class EPAMiningCoverageSuiteFitness extends TestSuiteFitnessFunction {
 		return goalsCoveredByResults;
 	}
 
-	private static void checkActionAndPreconditionsAnnotations(Map<String, Set<Method>> actionMethodsMap,
-			Map<String, Method> preconditionMethodsMap) throws EvosuiteError {
-		for (String actionId : actionMethodsMap.keySet()) {
-			if (!preconditionMethodsMap.containsKey(actionId)) {
-				throw new EvosuiteError("@EpaActionPrecondition annotation missing for action " + actionId);
-			}
-		}
-
-		for (String actionId : preconditionMethodsMap.keySet()) {
-			if (!actionMethodsMap.containsKey(actionId)) {
-				throw new EvosuiteError("Missing @EpaAction annotation for action " + actionId);
-			}
-		}
-	}
 }
