@@ -35,6 +35,8 @@ import org.evosuite.coverage.dataflow.DefUseCoverageFactory;
 import org.evosuite.coverage.dataflow.DefUseCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageFactory;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageSuiteFitness;
+import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPAErrorCoverageFactory;
 import org.evosuite.coverage.epa.EPAErrorCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPAExceptionCoverageFactory;
@@ -153,6 +155,8 @@ public class FitnessFunctions {
 			return new EPAMiningCoverageSuiteFitness();
 		case EPAEXCEPTIONMINING:
 			return new EPAExceptionMiningCoverageSuiteFitness();
+		case EPAADJACENTEDGESMINING:
+			return new EPAAdjacentEdgesMiningCoverageSuiteFitness();
 		case EPAADJACENTEDGES:
 			return new EPAAdjacentEdgesCoverageSuiteFitness(Properties.EPA_XML_PATH);
 			
@@ -228,6 +232,8 @@ public class FitnessFunctions {
 			return new EPAMiningCoverageFactory();
 		case EPAEXCEPTIONMINING:
 			return new EPAExceptionMiningCoverageFactory();
+		case EPAADJACENTEDGESMINING:
+			return new EPAAdjacentEdgesMiningCoverageFactory();
 		case EPAADJACENTEDGES:
 			return new EPAAdjacentEdgesCoverageFactory(EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
 		case TRYCATCH:

@@ -87,6 +87,7 @@ public class WholeTestSuiteStrategy extends TestGenerationStrategy {
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTIONMINING)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGESMINING)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.LINE)
 	            || ArrayUtil.contains(Properties.CRITERION, Criterion.BRANCH)
@@ -114,6 +115,7 @@ public class WholeTestSuiteStrategy extends TestGenerationStrategy {
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EXCEPTION) 
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTIONMINING)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGESMINING)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)) {
 			// Perform search
 			LoggingUtils.getEvoLogger().info("* Using seed {}", Randomness.getSeed() );

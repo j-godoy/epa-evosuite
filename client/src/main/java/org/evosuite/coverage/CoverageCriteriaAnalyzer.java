@@ -189,6 +189,8 @@ public class CoverageCriteriaAnalyzer {
             	return RuntimeVariable.EpaMiningCoverage;
             case EPAEXCEPTIONMINING:
             	return RuntimeVariable.EpaExceptionMiningCoverage;
+            case EPAADJACENTEDGESMINING:
+            	return RuntimeVariable.EpaAdjacentEdgesMiningCoverage;
             case TRYCATCH:
                 return RuntimeVariable.TryCatchCoverage;
             default:
@@ -367,6 +369,8 @@ public class CoverageCriteriaAnalyzer {
             	return RuntimeVariable.EpaMiningCoverage;
             case EPAEXCEPTIONMINING:
             	return RuntimeVariable.EpaExceptionMiningCoverage;
+            case EPAADJACENTEDGESMINING:
+            	return RuntimeVariable.EpaAdjacentEdgesMiningCoverage;
             default:
                 logger.debug("Criterion not supported: " + criterion);
                 return null;
