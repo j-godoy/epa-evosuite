@@ -108,4 +108,21 @@ public class EPAAdjacentEdgesPair implements Serializable {
 		return pairsOfExecutionResult;
 	}
 
+	public String getMethodName() {
+		String actionName = this.getFirstEpaTransition().getActionName();
+		String methodName = "";
+		if (actionName.contains("(")) {
+			methodName = actionName.split("\\(")[0];
+		} else {
+			methodName = actionName + " -- ";
+		}
+		actionName = this.getSecondEpaTransition().getActionName();
+		if (actionName.contains("(")) {
+			methodName += actionName.split("\\(")[0];
+		} else {
+			methodName += actionName;
+		}
+		return methodName;
+	}
+
 }

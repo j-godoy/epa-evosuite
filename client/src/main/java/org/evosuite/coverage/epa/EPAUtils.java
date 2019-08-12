@@ -13,9 +13,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.evosuite.Properties;
+import org.evosuite.Properties.Criterion;
 import org.evosuite.epa.EpaAction;
 import org.evosuite.epa.EpaActionPrecondition;
 import org.evosuite.testcase.execution.EvosuiteError;
+import org.evosuite.utils.ArrayUtil;
 
 /**
  * EPA-related utilities
@@ -264,6 +267,14 @@ public class EPAUtils {
 				throw new EvosuiteError("Missing @EpaAction annotation for action " + actionId);
 			}
 		}
+	}
+	
+	public static boolean currCriteriaRequireEPAXML()
+	{
+		return ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPATRANSITION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES);
 	}
 	
 	public static String EXCEPTION_SUFFIX_ACTION_ID = "EXCEP_";

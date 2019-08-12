@@ -4,7 +4,7 @@ import org.evosuite.testcase.TestChromosome;
 import org.evosuite.testcase.TestFitnessFunction;
 import org.evosuite.testcase.execution.ExecutionResult;
 
-public class EPAAdjacentEdgesCoverageTestFitness extends TestFitnessFunction{
+public class EPAAdjacentEdgesCoverageTestFitness extends TestFitnessFunction {
 
 	private static final long serialVersionUID = -7176491037398694311L;
 	

@@ -15,11 +15,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.evosuite.Properties;
 import org.evosuite.TestGenerationContext;
-import org.evosuite.Properties.Criterion;
 import org.evosuite.runtime.LoopCounter;
 import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionTracer;
-import org.evosuite.utils.ArrayUtil;
 import org.objectweb.asm.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -221,21 +219,13 @@ public class EPAMonitor {
 	 */
 	private final IdentityHashMap<Object, EPAState> previousEpaState = new IdentityHashMap<>();
 	
-	private static boolean requireEPAXML()
-	{
-		return ArrayUtil.contains(Properties.CRITERION, Properties.Criterion.EPATRANSITION)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES);
-	}
-
 	public static EPAMonitor getInstance() {
 		if (instance == null) {
-			if (requireEPAXML() && Properties.EPA_XML_PATH == null) {
+			if (EPAUtils.currCriteriaRequireEPAXML() && Properties.EPA_XML_PATH == null) {
 				throw new IllegalStateException("EPA_XML_PATH should be configured before creating EPAMonitor!");
 			}
 			try {
-				if (Properties.EPA_XML_PATH != null && requireEPAXML()) {
+				if (Properties.EPA_XML_PATH != null && EPAUtils.currCriteriaRequireEPAXML()) {
 					final EPA automata = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 					instance = new EPAMonitor(automata);
 				} else {

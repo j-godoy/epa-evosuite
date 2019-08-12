@@ -21,20 +21,7 @@ public class EPAAdjacentEdgesCoverageGoal implements Serializable, Comparable<EP
 	}
 	
 	public String getMethodName() {
-		String actionName = this.epaAdjacentEdgesPair.getFirstEpaTransition().getActionName();
-		String methodName = "";
-		if (actionName.contains("(")) {
-			methodName = actionName.split("\\(")[0];
-		} else {
-			methodName = actionName + " -- ";
-		}
-		actionName = this.epaAdjacentEdgesPair.getSecondEpaTransition().getActionName();
-		if (actionName.contains("(")) {
-			methodName += actionName.split("\\(")[0];
-		} else {
-			methodName += actionName;
-		}
-		return methodName;
+		return this.epaAdjacentEdgesPair.getMethodName();
 	}
 
 	public String getClassName() {
