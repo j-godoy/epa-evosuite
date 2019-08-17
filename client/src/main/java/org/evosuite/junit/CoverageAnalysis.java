@@ -34,7 +34,15 @@ import org.evosuite.coverage.CoverageCriteriaAnalyzer;
 import org.evosuite.coverage.FitnessFunctions;
 import org.evosuite.coverage.TestFitnessFactory;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageFactory;
-import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageSuiteFitness;
+import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageTestFitness;
+import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageTestFitness;
+import org.evosuite.coverage.epa.EPAExceptionCoverageFactory;
+import org.evosuite.coverage.epa.EPAExceptionCoverageTestFitness;
+import org.evosuite.coverage.epa.EPAExceptionMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPAExceptionMiningCoverageTestFitness;
+import org.evosuite.coverage.epa.EPAMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPAMiningCoverageTestFitness;
 import org.evosuite.coverage.mutation.Mutation;
 import org.evosuite.coverage.mutation.MutationObserver;
 import org.evosuite.coverage.mutation.MutationPool;
@@ -464,18 +472,51 @@ public class CoverageAnalysis {
 		// Execution result of a dummy Test Case
 		ExecutionResult executionResult = new ExecutionResult(dummy.getTestCase());
 
-		// I need to populate the covered goals for EPAADJACENTEDGES because they are generated on demand
-		if(criterion == Criterion.EPAADJACENTEDGES) {
+		//TODO: chequear si es necesario, sino, sacar
+		// I need to populate the covered goals for criteria that construct goals on demand
+		List<ExecutionResult> executionResults = new ArrayList<>();
+		if(criterion == Criterion.EPAEXCEPTION || criterion == Criterion.EPAADJACENTEDGES || criterion == Criterion.EPAMINING
+				|| criterion == Criterion.EPAEXCEPTIONMINING || criterion == Criterion.EPAADJACENTEDGESMINING) {
 			for (int index_test = 0; index_test < results.size(); index_test++) {
 				JUnitResult tR = results.get(index_test);
 
 				ExecutionTrace trace = tR.getExecutionTrace();
-				executionResult.setTrace(trace);
-				EPAAdjacentEdgesCoverageSuiteFitness.constructGoals(executionResult, null);
+				ExecutionResult execResult = new ExecutionResult(dummy.getTestCase());
+				execResult.setTrace(trace);
+				executionResults.add(execResult);
 			}
 
-			goals = factory.getCoverageGoals();
-			totalGoals += EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+			//populate goals
+			switch(criterion)
+			{
+				case EPAEXCEPTION:
+					EPAExceptionCoverageFactory.calculateEPAExceptionInfo(executionResults, null);
+					goals = new ArrayList<EPAExceptionCoverageTestFitness>(EPAExceptionCoverageFactory.getGoals().values());
+					totalGoals += EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS;
+					break;
+				case EPAADJACENTEDGES:
+					EPAAdjacentEdgesCoverageFactory.calculateEPAAdjacentEdgesInfo(executionResults, null);
+					goals = new ArrayList<EPAAdjacentEdgesCoverageTestFitness>(EPAAdjacentEdgesCoverageFactory.getGoals().values());
+					totalGoals += EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+					break;
+				case EPAMINING:
+					EPAMiningCoverageFactory.calculateEPAMiningInfo(executionResults, null);
+					goals = new ArrayList<EPAMiningCoverageTestFitness>(EPAMiningCoverageFactory.getGoals().values());
+					totalGoals += EPAMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+					break;
+				case EPAEXCEPTIONMINING:
+					EPAExceptionMiningCoverageFactory.calculateEPAExceptionMiningInfo(executionResults, null);
+					goals = new ArrayList<EPAExceptionMiningCoverageTestFitness>(EPAExceptionMiningCoverageFactory.getGoals().values());
+					totalGoals += EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+					break;
+				case EPAADJACENTEDGESMINING:
+					EPAAdjacentEdgesMiningCoverageFactory.calculateEPAAdjacentEdgesMiningInfo(executionResults, null);
+					goals = new ArrayList<EPAAdjacentEdgesMiningCoverageTestFitness>(EPAAdjacentEdgesMiningCoverageFactory.getGoals().values());
+					totalGoals += EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+					break;
+				default:
+					break;
+			}
 		} else {
 			totalGoals += goals.size();
 		}
@@ -552,10 +593,11 @@ public class CoverageAnalysis {
 		}
 		logger.info("* CoverageBitString " + str.toString());
 
-		long goalsSize = goals.size();
-		if(criterion == Criterion.EPAADJACENTEDGES) {
-			goalsSize = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
-		}
+		long goalsSize = totalGoals;
+//		long goalsSize = goals.size();
+//		if(criterion == Criterion.EPAADJACENTEDGES) {
+//			goalsSize = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+//		}
 
 		RuntimeVariable bitStringVariable = CoverageCriteriaAnalyzer.getBitStringVariable(criterion);
 		if (goals.isEmpty()) {
