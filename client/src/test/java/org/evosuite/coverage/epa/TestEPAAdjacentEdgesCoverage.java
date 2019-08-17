@@ -53,6 +53,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase0();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -73,6 +74,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase1();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -93,6 +95,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase2();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -113,6 +116,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase3();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -133,6 +137,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase4();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -153,6 +158,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase test = createTestCase5();
 		TestSuiteChromosome suite = new TestSuiteChromosome();

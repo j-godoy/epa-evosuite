@@ -1,7 +1,6 @@
 package org.evosuite.coverage.epa;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,12 +16,8 @@ import org.xml.sax.SAXException;
 
 public class EPAExceptionCoverageSuiteFitness extends TestSuiteFitnessFunction {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3588790421141471290L;
-	private final EPA epa;
-	private final List<EPAExceptionCoverageTestFitness> goals;
+	private static int maxEPAExceptionGoalsCovered = 0;
 
 	public EPAExceptionCoverageSuiteFitness(String epaXMLFilename) {
 
@@ -30,11 +25,6 @@ public class EPAExceptionCoverageSuiteFitness extends TestSuiteFitnessFunction {
 			EPA target_epa = EPAFactory.buildEPA(epaXMLFilename);
 			EPASuiteFitness.checkEPAStates(target_epa, Properties.TARGET_CLASS);
 			EPASuiteFitness.checkEPAActionNames(target_epa, Properties.TARGET_CLASS);
-
-			this.epa = target_epa;
-			EPAExceptionCoverageFactory goalFactory = new EPAExceptionCoverageFactory(epaXMLFilename, this.epa);
-			this.goals = goalFactory.getCoverageGoals();
-
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			throw new EvosuiteError(e);
 		}
@@ -43,33 +33,50 @@ public class EPAExceptionCoverageSuiteFitness extends TestSuiteFitnessFunction {
 
 	@Override
 	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suiteChromosome) {
-		final List<ExecutionResult> executionResults = runTestSuite(suiteChromosome);
-		long coveredGoalsCount = getEPAExceptionTransitionsExecuted(executionResults).size();
-		
-		final double fitness = goals.size() - coveredGoalsCount;
-		updateIndividual(this, suiteChromosome, fitness);
-		final double coverage = (goals.size() > 0) ? (coveredGoalsCount / (double) goals.size()) : 0;
-		suiteChromosome.setCoverage(this, coverage);
-		suiteChromosome.setNumOfCoveredGoals(this, (int) coveredGoalsCount);
-		suiteChromosome.setNumOfNotCoveredGoals(this, (int) (goals.size() - coveredGoalsCount));
-		return fitness;
-	}
-	
-	private Set<EPATransition> getEPAExceptionTransitionsExecuted(List<ExecutionResult> executionResults) {
-		Set<EPATransition> exceptionTransitions = new HashSet<>();
-		for(ExecutionResult executionResult : executionResults) {
-			for (EPATrace epaTrace : executionResult.getTrace().getEPATraces()) {
-				for (EPATransition epaTransition : epaTrace.getEpaTransitions()) {
-					if (epaTransition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
-						// discard the rest of the trace if an invalid object state is reached
-						break;
-					}
-					if (epaTransition instanceof EPAExceptionalTransition)
-						exceptionTransitions.add(epaTransition);
-				}
+		logger.trace("Calculating EPAException fitness");
+
+
+		int maxNumberOfAutomataTransitions = EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS;
+
+		List<ExecutionResult> results = runTestSuite(suiteChromosome);
+		EPAExceptionCoverageSuiteFitness contextFitness = this;
+		Set<EPAExceptionCoverageTestFitness> goalsCoveredByResult = EPAExceptionCoverageFactory.calculateEPAExceptionInfo(results, contextFitness);
+
+		if (Properties.TEST_ARCHIVE) {
+			// If we are using the archive, then fitness is by definition 0
+			// as all assertions already covered are in the archive
+			suiteChromosome.setFitness(this, 0.0);
+			suiteChromosome.setCoverage(this, 1.0);
+			maxEPAExceptionGoalsCovered = EPAExceptionCoverageFactory.getGoals().size();
+			return 0.0;
+		}
+
+		int numCoveredGoals = goalsCoveredByResult.size();
+		int numUncoveredGoals = 0;
+		for (EPAExceptionCoverageTestFitness knownCoverageGoal : EPAExceptionCoverageFactory.getGoals().values()) {
+			if (!goalsCoveredByResult.contains(knownCoverageGoal)) {
+				numUncoveredGoals++;
 			}
 		}
-		return exceptionTransitions;
+
+		if (numCoveredGoals > maxEPAExceptionGoalsCovered) {
+			logger.info("(Exceptions) Best individual covers " + numCoveredGoals + " transitions");
+			maxEPAExceptionGoalsCovered = numCoveredGoals;
+		}
+
+		// We cannot set a coverage here, as it does not make any sense
+		// suiteChromosome.setCoverage(this, 1.0);
+		double epaExceptionCoverageFitness = maxNumberOfAutomataTransitions - numCoveredGoals;
+
+		suiteChromosome.setFitness(this, epaExceptionCoverageFitness);
+		if (maxEPAExceptionGoalsCovered > 0)
+			suiteChromosome.setCoverage(this, numCoveredGoals / maxEPAExceptionGoalsCovered);
+		else
+			suiteChromosome.setCoverage(this, 1.0);
+
+		suiteChromosome.setNumOfCoveredGoals(this, numCoveredGoals);
+		suiteChromosome.setNumOfNotCoveredGoals(this, numUncoveredGoals);
+		return epaExceptionCoverageFitness;
 	}
 	
 }

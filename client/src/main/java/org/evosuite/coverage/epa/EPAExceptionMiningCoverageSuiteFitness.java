@@ -19,18 +19,10 @@
  */
 package org.evosuite.coverage.epa;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import org.evosuite.Properties;
-import org.evosuite.TestGenerationContext;
-import org.evosuite.coverage.archive.TestsArchive;
 import org.evosuite.testcase.ExecutableChromosome;
-import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testsuite.AbstractTestSuiteChromosome;
 import org.evosuite.testsuite.TestSuiteFitnessFunction;
@@ -53,29 +45,11 @@ public class EPAExceptionMiningCoverageSuiteFitness extends TestSuiteFitnessFunc
 	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suite) {
 		logger.trace("Calculating EPAException Mining fitness");
 
-		Class<?> targetClass;
-		try {
-			targetClass = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
-		} catch (ClassNotFoundException e) {
-			throw new EvosuiteError(e);
-		}
-
-		Map<String, Set<Constructor<?>>> actionConstructorMap = EPAUtils.getEpaActionConstructors(targetClass);
-		Map<String, Set<Method>> actionMethodsMap = EPAUtils.getEpaActionMethods(targetClass);
-		Map<String, Method> preconditionMethodsMap = EPAUtils.getEpaActionPreconditionMethods(targetClass);
-
-		EPAUtils.checkActionAndPreconditionsAnnotationsForEpaMining(actionMethodsMap, preconditionMethodsMap);
-
-		Set<String> actionIds = new HashSet<String>(actionMethodsMap.keySet());
-		actionIds.addAll(actionConstructorMap.keySet());
-
-		int numberOfAutomataActions = actionIds.size();
-		int maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
-		int maxNumberOfAutomataTransitions = 2 * (maxNumberOfAutomataStates * numberOfAutomataActions * maxNumberOfAutomataStates);
+		int maxNumberOfAutomataTransitions = EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
 
 		List<ExecutionResult> results = runTestSuite(suite);
 		EPAExceptionMiningCoverageSuiteFitness contextFitness = this;
-		Set<EPAExceptionMiningCoverageTestFitness> goalsCoveredByResult = calculateEPAExceptionMiningInfo(results, contextFitness);
+		Set<EPAExceptionMiningCoverageTestFitness> goalsCoveredByResult = EPAExceptionMiningCoverageFactory.calculateEPAExceptionMiningInfo(results, contextFitness);
 
 		if (Properties.TEST_ARCHIVE) {
 			// If we are using the archive, then fitness is by definition 0
@@ -112,47 +86,6 @@ public class EPAExceptionMiningCoverageSuiteFitness extends TestSuiteFitnessFunc
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
 		return epaExceptionMiningCoverageFitness;
-	}
-
-	private static Set<EPAExceptionMiningCoverageTestFitness> calculateEPAExceptionMiningInfo(List<ExecutionResult> results,
-			EPAExceptionMiningCoverageSuiteFitness contextFitness) {
-
-		Set<EPAExceptionMiningCoverageTestFitness> goalsCoveredByResults = new HashSet<>();
-
-		for (ExecutionResult result : results) {
-			for (EPATrace epa_trace : result.getTrace().getEPATraces()) {
-				for (EPATransition epa_transition : epa_trace.getEpaTransitions()) {
-					if (epa_transition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
-						break;
-					}
-					 
-					String action_name = epa_transition.getActionName();
-					if (epa_transition instanceof EPAExceptionalTransition) {
-						action_name = EPAUtils.EXCEPTION_SUFFIX_ACTION_ID + action_name;
-					}
-					
-					EPAExceptionMiningCoverageTestFitness goal = new EPAExceptionMiningCoverageTestFitness(Properties.TARGET_CLASS,
-							epa_transition.getOriginState(), action_name,
-							epa_transition.getDestinationState());
-
-					if (!goalsCoveredByResults.contains(goal)) {
-						goalsCoveredByResults.add(goal);
-					}
-
-					String key = goal.getKey();
-
-					if (!EPAExceptionMiningCoverageFactory.getGoals().containsKey(key)) {
-						EPAExceptionMiningCoverageFactory.getGoals().put(key, goal);
-						if (Properties.TEST_ARCHIVE && contextFitness != null) {
-							TestsArchive.instance.addGoalToCover(contextFitness, goal);
-							TestsArchive.instance.putTest(contextFitness, goal, result);
-						}
-					}
-				}
-			}
-		}
-
-		return goalsCoveredByResults;
 	}
 
 }

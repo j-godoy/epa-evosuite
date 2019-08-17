@@ -1,14 +1,12 @@
 package org.evosuite.coverage.epa;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.evosuite.Properties;
-import org.evosuite.coverage.archive.TestsArchive;
 import org.evosuite.testcase.ExecutableChromosome;
 import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionResult;
@@ -19,6 +17,7 @@ import org.xml.sax.SAXException;
 public class EPAAdjacentEdgesCoverageSuiteFitness extends TestSuiteFitnessFunction {
 
 	private static final long serialVersionUID = -8137606898642577596L;
+	private static int maxEPAAdjacentEdgesGoalsCovered = 0;
 
 	public EPAAdjacentEdgesCoverageSuiteFitness(String epaXMLFilename) {
 
@@ -33,44 +32,47 @@ public class EPAAdjacentEdgesCoverageSuiteFitness extends TestSuiteFitnessFuncti
 	}
 
 	@Override
-	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> individual) {
-		final List<ExecutionResult> executionResults = runTestSuite(individual);
+	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suiteChromosome) {
+		final List<ExecutionResult> executionResults = runTestSuite(suiteChromosome);
+		EPAAdjacentEdgesCoverageSuiteFitness contextFitness = this;
 
-		Set<EPAAdjacentEdgesPair> adjacentPairs = new HashSet<EPAAdjacentEdgesPair>();
-		for (ExecutionResult executionResult : executionResults) {
-			Set<EPAAdjacentEdgesPair> adjacentPairsForResult = constructGoals(executionResult, this);
-			adjacentPairs.addAll(adjacentPairsForResult);
+		Set<EPAAdjacentEdgesCoverageTestFitness> goalsCoveredByResult = EPAAdjacentEdgesCoverageFactory.calculateEPAAdjacentEdgesInfo(executionResults, contextFitness);
+		
+		if (Properties.TEST_ARCHIVE) {
+			// If we are using the archive, then fitness is by definition 0
+			// as all assertions already covered are in the archive
+			suiteChromosome.setFitness(this, 0.0);
+			suiteChromosome.setCoverage(this, 1.0);
+			maxEPAAdjacentEdgesGoalsCovered = EPAAdjacentEdgesCoverageFactory.getGoals().size();
+			return 0.0;
 		}
-
-		long coveredGoalsCount = adjacentPairs.size();
-		long upperBoundOfGoals = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
-		final double fitness = upperBoundOfGoals - coveredGoalsCount;
-		updateIndividual(this, individual, fitness);
-		final double coverage = (upperBoundOfGoals > 0) ?
-				(coveredGoalsCount / (double) upperBoundOfGoals) : 0;
-		individual.setCoverage(this, coverage);
-		individual.setNumOfCoveredGoals(this, (int) coveredGoalsCount);
-		individual.setNumOfNotCoveredGoals(this, (int) (upperBoundOfGoals - coveredGoalsCount));
-		return fitness;
-	}
-
-	public static Set<EPAAdjacentEdgesPair> constructGoals(ExecutionResult executionResult, EPAAdjacentEdgesCoverageSuiteFitness contextFitness) {
-		Set<EPAAdjacentEdgesPair> adjacentPairsForResult = EPAAdjacentEdgesPair.getAdjacentEdgesPairsExecuted(executionResult);
-		for (EPAAdjacentEdgesPair pair : adjacentPairsForResult) {
-			EPATransition firstTransition = pair.getFirstEpaTransition();
-			EPATransition secondTransition = pair.getSecondEpaTransition();
-			EPAAdjacentEdgesCoverageGoal coverageGoal = new EPAAdjacentEdgesCoverageGoal(Properties.TARGET_CLASS,firstTransition, secondTransition);
-			EPAAdjacentEdgesCoverageTestFitness goal = new EPAAdjacentEdgesCoverageTestFitness(coverageGoal);
-			String key = goal.getKey();
-			if (!EPAAdjacentEdgesCoverageFactory.getGoals().containsKey(key)) {
-				EPAAdjacentEdgesCoverageFactory.getGoals().put(key, goal);
-				if (Properties.TEST_ARCHIVE && contextFitness != null) {
-					TestsArchive.instance.addGoalToCover(contextFitness, goal);
-					TestsArchive.instance.putTest(contextFitness, goal, executionResult);
-				}
+		
+		int numCoveredGoals = goalsCoveredByResult.size();
+		int numUncoveredGoals = 0;
+		for (EPAAdjacentEdgesCoverageTestFitness knownCoverageGoal : EPAAdjacentEdgesCoverageFactory.getGoals().values()) {
+			if (!goalsCoveredByResult.contains(knownCoverageGoal)) {
+				numUncoveredGoals++;
 			}
 		}
-		return adjacentPairsForResult;
-	}
 
+		if (numCoveredGoals > maxEPAAdjacentEdgesGoalsCovered) {
+			logger.info("(Adjacent Edges pairs) Best individual covers " + numCoveredGoals + " transitions");
+			maxEPAAdjacentEdgesGoalsCovered = numCoveredGoals;
+		}
+
+		// We cannot set a coverage here, as it does not make any sense
+		// suiteChromosome.setCoverage(this, 1.0);
+		double epaAdjacentEdgesCoverageFitness = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS - numCoveredGoals;
+
+		suiteChromosome.setFitness(this, epaAdjacentEdgesCoverageFitness);
+		if (maxEPAAdjacentEdgesGoalsCovered > 0)
+			suiteChromosome.setCoverage(this, numCoveredGoals / maxEPAAdjacentEdgesGoalsCovered);
+		else
+			suiteChromosome.setCoverage(this, 1.0);
+
+		suiteChromosome.setNumOfCoveredGoals(this, numCoveredGoals);
+		suiteChromosome.setNumOfNotCoveredGoals(this, numUncoveredGoals);
+		return epaAdjacentEdgesCoverageFitness;
+	}
+	
 }

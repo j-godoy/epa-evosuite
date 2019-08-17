@@ -22,7 +22,7 @@ public class EPAExceptionCoverageGoal implements Serializable, Comparable<EPAExc
 	private final String actionId;
 	private final EPAState toState;
 
-	public EPAExceptionCoverageGoal(String className, EPA epa, EPAState fromState, String actionId, EPAState toState) {
+	public EPAExceptionCoverageGoal(String className, EPAState fromState, String actionId, EPAState toState) {
 		this.className = className;
 		this.fromState = fromState;
 		this.actionId = actionId;
@@ -32,7 +32,7 @@ public class EPAExceptionCoverageGoal implements Serializable, Comparable<EPAExc
 	public String getMethodName() {
 		String methodName;
 		if (actionId.contains("(")) {
-			methodName = actionId.split("(")[0];
+			methodName = actionId.split("\\(")[0];
 		} else {
 			methodName = actionId;
 		}
@@ -51,7 +51,7 @@ public class EPAExceptionCoverageGoal implements Serializable, Comparable<EPAExc
 	}
 
 	public String getGoalName() {
-		return String.format("Exception[%s,%s,%s]", fromState.getName(), actionId, toState.getName());
+		return String.format("EPAException[%s,%s,%s]", fromState.getName(), actionId, toState.getName());
 	}
 
 	/**
@@ -65,32 +65,24 @@ public class EPAExceptionCoverageGoal implements Serializable, Comparable<EPAExc
 	public double getDistance(ExecutionResult result) {
 		for (EPATrace epa_trace : result.getTrace().getEPATraces()) {
 			for (EPATransition epa_transition : epa_trace.getEpaTransitions()) {
-
-				if (coversExceptionalTransition(epa_transition)) {
-					return 0.0;
-				}
-
-				if (epa_transition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
-					// discard the rest of the trace if an invalid object state is reached
+				EPAState epa_transition_destination = epa_transition.getDestinationState();
+				if (epa_transition_destination.equals(EPAState.INVALID_OBJECT_STATE)) {
 					break;
+				}
+				
+				String epa_transition_actionId = epa_transition.getActionName();
+				if(epa_transition instanceof EPAExceptionalTransition) {
+					epa_transition_actionId = EPAUtils.EXCEPTION_SUFFIX_ACTION_ID + epa_transition_actionId;
+				}
+				
+				EPAState epa_transition_origin = epa_transition.getOriginState();
+				if (epa_transition_origin.equals(this.fromState) && epa_transition_actionId.equals(this.actionId)
+						&& epa_transition_destination.equals(this.toState)) {
+					return 0.0;
 				}
 			}
 		}
 		return 1.0;
-	}
-
-	/**
-	 * Checks if the current transition covers is an exceptional transition
-	 * traversing the fromState,toState with actionId
-	 * 
-	 * @param epa_transition
-	 * @return
-	 */
-	private boolean coversExceptionalTransition(EPATransition epa_transition) {
-		return (epa_transition instanceof EPAExceptionalTransition)
-				&& epa_transition.getOriginState().equals(this.fromState)
-				&& epa_transition.getActionName().equals(this.actionId)
-				&& epa_transition.getDestinationState().equals(this.toState);
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {

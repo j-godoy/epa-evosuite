@@ -113,10 +113,12 @@ public class WholeTestSuiteStrategy extends TestGenerationStrategy {
 		TestSuiteChromosome testSuite = null;
 		if (!(Properties.STOP_ZERO && goals.isEmpty()) 
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EXCEPTION) 
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPATRANSITION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTIONMINING)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGESMINING)
-				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)) {
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGESMINING)) {
 			// Perform search
 			LoggingUtils.getEvoLogger().info("* Using seed {}", Randomness.getSeed() );
 			LoggingUtils.getEvoLogger().info("* Starting evolution");

@@ -19,18 +19,10 @@
  */
 package org.evosuite.coverage.epa;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import org.evosuite.Properties;
-import org.evosuite.TestGenerationContext;
-import org.evosuite.coverage.archive.TestsArchive;
 import org.evosuite.testcase.ExecutableChromosome;
-import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testsuite.AbstractTestSuiteChromosome;
 import org.evosuite.testsuite.TestSuiteFitnessFunction;
@@ -53,30 +45,11 @@ public class EPAMiningCoverageSuiteFitness extends TestSuiteFitnessFunction {
 	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suite) {
 		logger.trace("Calculating EPA Mining fitness");
 
-		Class<?> targetClass;
-		try {
-			targetClass = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
-		} catch (ClassNotFoundException e) {
-			throw new EvosuiteError(e);
-		}
-
-		Map<String, Set<Constructor<?>>> actionConstructorMap = EPAUtils.getEpaActionConstructors(targetClass);
-		Map<String, Set<Method>> actionMethodsMap = EPAUtils.getEpaActionMethods(targetClass);
-		Map<String, Method> preconditionMethodsMap = EPAUtils.getEpaActionPreconditionMethods(targetClass);
-
-		EPAUtils.checkActionAndPreconditionsAnnotationsForEpaMining(actionMethodsMap, preconditionMethodsMap);
-
-		Set<String> actionIds = new HashSet<String>(actionMethodsMap.keySet());
-		actionIds.addAll(actionConstructorMap.keySet());
-
-		int numberOfAutomataActions = actionIds.size();
-		int maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
-		int maxNumberOfAutomataTransitions = maxNumberOfAutomataStates * numberOfAutomataActions
-				* maxNumberOfAutomataStates;
+		int maxNumberOfAutomataTransitions = EPAMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
 
 		List<ExecutionResult> results = runTestSuite(suite);
 		EPAMiningCoverageSuiteFitness contextFitness = this;
-		Set<EPAMiningCoverageTestFitness> goalsCoveredByResult = calculateEPAMiningInfo(results, contextFitness);
+		Set<EPAMiningCoverageTestFitness> goalsCoveredByResult = EPAMiningCoverageFactory.calculateEPAMiningInfo(results, contextFitness);
 
 		if (Properties.TEST_ARCHIVE) {
 			// If we are using the archive, then fitness is by definition 0
@@ -113,45 +86,6 @@ public class EPAMiningCoverageSuiteFitness extends TestSuiteFitnessFunction {
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
 		return epaMiningCoverageFitness;
-	}
-
-	private static Set<EPAMiningCoverageTestFitness> calculateEPAMiningInfo(List<ExecutionResult> results,
-			EPAMiningCoverageSuiteFitness contextFitness) {
-
-		Set<EPAMiningCoverageTestFitness> goalsCoveredByResults = new HashSet<EPAMiningCoverageTestFitness>();
-
-		for (ExecutionResult result : results) {
-			for (EPATrace epa_trace : result.getTrace().getEPATraces()) {
-				for (EPATransition epa_transition : epa_trace.getEpaTransitions()) {
-					if (epa_transition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
-						break;
-					}
-					if (epa_transition instanceof EPAExceptionalTransition) {
-						break;
-					}
-
-					EPAMiningCoverageTestFitness goal = new EPAMiningCoverageTestFitness(Properties.TARGET_CLASS,
-							epa_transition.getOriginState(), epa_transition.getActionName(),
-							epa_transition.getDestinationState());
-
-					if (!goalsCoveredByResults.contains(goal)) {
-						goalsCoveredByResults.add(goal);
-					}
-
-					String key = goal.getKey();
-
-					if (!EPAMiningCoverageFactory.getGoals().containsKey(key)) {
-						EPAMiningCoverageFactory.getGoals().put(key, goal);
-						if (Properties.TEST_ARCHIVE && contextFitness != null) {
-							TestsArchive.instance.addGoalToCover(contextFitness, goal);
-							TestsArchive.instance.putTest(contextFitness, goal, result);
-						}
-					}
-				}
-			}
-		}
-
-		return goalsCoveredByResults;
 	}
 
 }

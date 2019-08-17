@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.evosuite.Properties;
+import org.evosuite.TestGenerationContext;
 import org.evosuite.Properties.Criterion;
 import org.evosuite.epa.EpaAction;
 import org.evosuite.epa.EpaActionPrecondition;
@@ -254,7 +255,27 @@ public class EPAUtils {
 		return constructors;
 	}
 	
-	public static void checkActionAndPreconditionsAnnotationsForEpaMining(Map<String, Set<Method>> actionMethodsMap,
+	public static int checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize() throws EvosuiteError {
+		Class<?> targetClass;
+		try {
+			targetClass = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
+		} catch (ClassNotFoundException e) {
+			throw new EvosuiteError(e);
+		}
+
+		Map<String, Set<Constructor<?>>> actionConstructorMap = EPAUtils.getEpaActionConstructors(targetClass);
+		Map<String, Set<Method>> actionMethodsMap = EPAUtils.getEpaActionMethods(targetClass);
+		Map<String, Method> preconditionMethodsMap = EPAUtils.getEpaActionPreconditionMethods(targetClass);
+
+		EPAUtils.checkActionAndPreconditionsAnnotationsForEpaMining(actionMethodsMap, preconditionMethodsMap);
+
+		Set<String> actionIds = new HashSet<String>(actionMethodsMap.keySet());
+		actionIds.addAll(actionConstructorMap.keySet());
+		
+		return actionIds.size();
+	}
+	
+	private static void checkActionAndPreconditionsAnnotationsForEpaMining(Map<String, Set<Method>> actionMethodsMap,
 			Map<String, Method> preconditionMethodsMap) throws EvosuiteError {
 		for (String actionId : actionMethodsMap.keySet()) {
 			if (!preconditionMethodsMap.containsKey(actionId)) {
