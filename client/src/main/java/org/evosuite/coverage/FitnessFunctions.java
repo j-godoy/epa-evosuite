@@ -70,14 +70,10 @@ import org.evosuite.coverage.statement.StatementCoverageFactory;
 import org.evosuite.coverage.statement.StatementCoverageSuiteFitness;
 import org.evosuite.regression.RegressionSuiteFitness;
 import org.evosuite.testcase.TestFitnessFunction;
-import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testsuite.TestSuiteFitnessFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 
 /**
  * factory class for fitness functions
@@ -227,7 +223,7 @@ public class FitnessFunctions {
 		case EPAERROR:
 			return new EPAErrorCoverageFactory(Properties.TARGET_CLASS, EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
 		case EPAEXCEPTION:
-			return new EPAExceptionCoverageFactory(Properties.TARGET_CLASS, EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
+			return new EPAExceptionCoverageFactory(EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
 		case EPAMINING:
 			return new EPAMiningCoverageFactory();
 		case EPAEXCEPTIONMINING:
