@@ -91,10 +91,6 @@ public class EPAAdjacentEdgesPair implements Serializable {
 	 * @param executionResult
 	 * @return
 	 */
-	//TODO: no diferencia diferentes instancias de clase. Ejemplo:
-	// first transition  = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
-	// second transition = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
-	// Al parecer, son dos instancias de Socket diferentes, pero no tengo forma de saberlo...
 	public static Set<EPAAdjacentEdgesPair> getAdjacentEdgesPairsExecuted(ExecutionResult executionResult) {
 		Set<EPAAdjacentEdgesPair> pairsOfExecutionResult = new HashSet<>();
 		for (EPATrace epaTrace : executionResult.getTrace().getEPATraces()) {
@@ -109,7 +105,10 @@ public class EPAAdjacentEdgesPair implements Serializable {
 					// discard the rest of the trace if an invalid object state is reached
 					break;
 				}
-				// final state first transition == initial state second transition
+				// final state first transition == initial state second transition. Ex:
+				// first transition  = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
+				// second transition = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
+				// when 2 diferent EpaAction has same name
 				if(!firstEpaTransition.getDestinationState().equals(secondEpaTransition.getOriginState()))
 					break;
 				pairsOfExecutionResult.add(new EPAAdjacentEdgesPair(firstEpaTransition, secondEpaTransition));
