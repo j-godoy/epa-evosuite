@@ -30,7 +30,6 @@ import java.util.Set;
 import org.evosuite.coverage.dataflow.DefUse;
 import org.evosuite.coverage.epa.EPATrace;
 import org.evosuite.coverage.epa.EPATransition;
-import org.evosuite.coverage.epa.MalformedEPATraceException;
 import org.evosuite.setup.CallContext;
 import org.evosuite.testcase.execution.ExecutionTraceImpl.BranchEval;
 
