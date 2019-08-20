@@ -212,6 +212,48 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		return test;
 	}
 	
+	@Test
+	public void testCoverage_6() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+			IOException, SAXException, ParserConfigurationException {
+		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
+		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
+
+		DefaultTestCase test = createTestCase6();
+		TestSuiteChromosome suite = new TestSuiteChromosome();
+		suite.addTest(test);
+
+		long numOfAdjacentEdgesGoals = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+		EPAAdjacentEdgesCoverageSuiteFitness adjacentEdgesFitness = new EPAAdjacentEdgesCoverageSuiteFitness(Properties.EPA_XML_PATH);
+		suite.addFitness(adjacentEdgesFitness);
+		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
+		int expectedNumOfCoveredGoals = 2;
+		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
+	}
+	
+	@Test
+	public void testCoverage_7() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
+			IOException, SAXException, ParserConfigurationException {
+		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
+		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
+		Properties.TEST_ARCHIVE = false;
+
+		DefaultTestCase test = createTestCase7();
+		TestSuiteChromosome suite = new TestSuiteChromosome();
+		suite.addTest(test);
+
+		long numOfAdjacentEdgesGoals = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+		EPAAdjacentEdgesCoverageSuiteFitness adjacentEdgesFitness = new EPAAdjacentEdgesCoverageSuiteFitness(Properties.EPA_XML_PATH);
+		suite.addFitness(adjacentEdgesFitness);
+		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
+		int expectedNumOfCoveredGoals = 1;
+		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
+	}
+	
 	/**
 	 * Builds the test case:
 	 * 
@@ -358,6 +400,75 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 
 		// var1 = new MiniBoundedStack()
 		builder.addConstructorStatement(constructor);
+		DefaultTestCase test = builder.toTestCase();
+		return test;
+	}
+	
+	/**
+	 * Builds the test case:
+	 * 
+	 * <code>
+	 * stack = new BoundedStack();
+	 * stack2 = new BoundedStack();
+	 * stack.push(arg0);
+	 * stack2.pop();
+	 * </code>
+	 * 
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws NoSuchMethodException
+	 */
+	private DefaultTestCase createTestCase6() throws ClassNotFoundException, NoSuchMethodException {
+		Class<?> clazz = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
+		Constructor<?> constructor = clazz.getConstructor();
+		Constructor<?> constructor2 = clazz.getConstructor();
+		EPATestCaseBuilder builder = new EPATestCaseBuilder();
+		Method pop_method = clazz.getMethod("pop");
+		Method push_method = clazz.getMethod("push", int.class);
+		// int var0 = 10;
+		VariableReference var0 = builder.addIntegerStatement(10);
+
+		// var1 = new MiniBoundedStack()
+		VariableReference var1 = builder.addConstructorStatement(constructor);
+		// var2 = new MiniBoundedStack()
+		VariableReference var2 = builder.addConstructorStatement(constructor2);
+		// var1.push(arg0)
+		builder.addMethodStatement(var1, push_method, var0);
+		// var2.pop()
+		builder.addMethodStatement(var2, pop_method);
+
+		DefaultTestCase test = builder.toTestCase();
+		return test;
+	}
+	
+	/**
+	 * Builds the test case:
+	 * 
+	 * <code>
+	 * stack = new BoundedStack();
+	 * stack = new BoundedStack();
+	 * stack.push(arg0);
+	 * </code>
+	 * 
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws NoSuchMethodException
+	 */
+	private DefaultTestCase createTestCase7() throws ClassNotFoundException, NoSuchMethodException {
+		Class<?> clazz = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
+		Constructor<?> constructor = clazz.getConstructor();
+		EPATestCaseBuilder builder = new EPATestCaseBuilder();
+		Method push_method = clazz.getMethod("push", int.class);
+		// int var0 = 10;
+		VariableReference var0 = builder.addIntegerStatement(10);
+
+		// var1 = new MiniBoundedStack()
+		VariableReference var1 = builder.addConstructorStatement(constructor);
+		// var2 = new MiniBoundedStack()
+		VariableReference var2 = builder.addConstructorStatement(constructor);
+		// var1.push(arg0)
+		builder.addMethodStatement(var1, push_method, var0);
+
 		DefaultTestCase test = builder.toTestCase();
 		return test;
 	}
