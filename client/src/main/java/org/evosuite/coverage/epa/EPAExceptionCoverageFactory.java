@@ -48,11 +48,8 @@ public class EPAExceptionCoverageFactory extends AbstractFitnessFactory<EPAExcep
 					}
 					 
 					String action_name = epa_transition.getActionName();
-					if (epa_transition instanceof EPAExceptionalTransition) {
-						action_name = EPAUtils.EXCEPTION_SUFFIX_ACTION_ID + action_name;
-					}
-					EPAExceptionCoverageGoal epaExceptionGoal = new EPAExceptionCoverageGoal(Properties.TARGET_CLASS, epa_transition.getOriginState(), action_name,
-							epa_transition.getDestinationState());
+					EPAExceptionCoverageGoal epaExceptionGoal = new EPAExceptionCoverageGoal(Properties.TARGET_CLASS, epa_transition.getOriginState(),
+							action_name, epa_transition.getDestinationState());
 					EPAExceptionCoverageTestFitness goal = new EPAExceptionCoverageTestFitness(epaExceptionGoal);
 					
 					if (!goalsCoveredByResults.contains(goal)) {

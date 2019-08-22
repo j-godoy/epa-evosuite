@@ -3,10 +3,11 @@ package org.evosuite.coverage.epa;
 public class EPAExceptionalTransition extends EPATransition {
 
 	private final String exceptionThrown;
+	private static final String EXCEPTION_PREFIX_ACTION_ID = "EXCEP_";
 
 	public EPAExceptionalTransition(EPAState originState, String actionName, EPAState destinationState,
 			String exceptionThrown) {
-		super(originState, actionName, destinationState);
+		super(originState, EXCEPTION_PREFIX_ACTION_ID + actionName, destinationState);
 		this.exceptionThrown = exceptionThrown;
 	}
 

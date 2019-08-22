@@ -298,5 +298,4 @@ public class EPAUtils {
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES);
 	}
 	
-	public static String EXCEPTION_SUFFIX_ACTION_ID = "EXCEP_";
 }

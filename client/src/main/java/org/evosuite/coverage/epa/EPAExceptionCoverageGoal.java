@@ -71,9 +71,9 @@ public class EPAExceptionCoverageGoal implements Serializable, Comparable<EPAExc
 				}
 				
 				String epa_transition_actionId = epa_transition.getActionName();
-				if(epa_transition instanceof EPAExceptionalTransition) {
-					epa_transition_actionId = EPAUtils.EXCEPTION_SUFFIX_ACTION_ID + epa_transition_actionId;
-				}
+//				if(epa_transition instanceof EPAExceptionalTransition) {
+//					epa_transition_actionId = EPAUtils.EXCEPTION_PREFIX_ACTION_ID + epa_transition_actionId;
+//				}
 				
 				EPAState epa_transition_origin = epa_transition.getOriginState();
 				if (epa_transition_origin.equals(this.fromState) && epa_transition_actionId.equals(this.actionId)

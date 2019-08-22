@@ -48,9 +48,9 @@ public class EPAExceptionMiningCoverageFactory extends AbstractFitnessFactory<EP
 					}
 					 
 					String action_name = epa_transition.getActionName();
-					if (epa_transition instanceof EPAExceptionalTransition) {
-						action_name = EPAUtils.EXCEPTION_SUFFIX_ACTION_ID + action_name;
-					}
+//					if (epa_transition instanceof EPAExceptionalTransition) {
+//						action_name = EPAUtils.EXCEPTION_PREFIX_ACTION_ID + action_name;
+//					}
 					
 					EPAExceptionMiningCoverageTestFitness goal = new EPAExceptionMiningCoverageTestFitness(Properties.TARGET_CLASS,
 							epa_transition.getOriginState(), action_name,

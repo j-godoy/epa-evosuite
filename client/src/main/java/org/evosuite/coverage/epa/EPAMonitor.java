@@ -218,7 +218,7 @@ public class EPAMonitor {
 	 * This map keeps the last EPA state observed for each object
 	 */
 	private final IdentityHashMap<Object, EPAState> previousEpaState = new IdentityHashMap<>();
-	
+
 	public static EPAMonitor getInstance() {
 		if (instance == null) {
 			if (EPAUtils.currCriteriaRequireEPAXML() && Properties.EPA_XML_PATH == null) {
