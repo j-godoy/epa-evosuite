@@ -103,7 +103,12 @@ public class MOSuiteStrategy extends TestGenerationStrategy {
 		ClientServices.getInstance().getClientNode().trackOutputVariable(RuntimeVariable.Total_Goals, fitnessFunctions.size());
 		TestSuiteChromosome testSuite = null;
 
-		if (!(Properties.STOP_ZERO && fitnessFunctions.isEmpty()) || ArrayUtil.contains(Properties.CRITERION, Criterion.EXCEPTION)) {
+		if (!(Properties.STOP_ZERO && fitnessFunctions.isEmpty()) || ArrayUtil.contains(Properties.CRITERION, Criterion.EXCEPTION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
+				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES)
+				 || ArrayUtil.contains(Properties.CRITERION, Criterion.EPAMINING)
+				 || ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTIONMINING)
+				 || ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGESMINING)) {
 			// Perform search
 			LoggingUtils.getEvoLogger().info("* Using seed {}", Randomness.getSeed());
 			LoggingUtils.getEvoLogger().info("* Starting evolution");
