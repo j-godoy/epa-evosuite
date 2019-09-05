@@ -376,7 +376,7 @@ public enum RuntimeVariable {
 	/** The coverage of exceptions in each state of the EPA automata */
 	EpaExceptionCoverage,
 	/** The coverage of normal transitions of an unknown EPA automata */
-	EpaMiningCoverage,
+	EpaTransitionMiningCoverage,
 	/** The coverage of normal and exceptional transitions of an unknown EPA automata */
 	EpaExceptionMiningCoverage,
 	/** The coverage of adjacent edges pairs transitions of an unknown EPA automata */
