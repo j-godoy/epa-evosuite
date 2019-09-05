@@ -57,8 +57,7 @@ public class TestInvalidState extends TestEPATransitionCoverage {
 		Properties.EPA_XML_PATH = BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPATRANSITION };
 
-		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(Properties.TARGET_CLASS,
-				EPAFactory.buildEPA(Properties.EPA_XML_PATH));
+		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(EPAFactory.buildEPA(Properties.EPA_XML_PATH));
 		List<EPATransitionCoverageTestFitness> goals = factory.getCoverageGoals();
 		assertEquals(7, goals.size());
 

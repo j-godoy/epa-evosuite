@@ -88,9 +88,9 @@ public class TestEPAGoalsListItr extends TestEPATransitionCoverage {
 			ParserConfigurationException, SAXException, IOException, MalformedEPATraceException {
 		Properties.TARGET_CLASS = ListItr.class.getName();
 		Properties.EPA_XML_PATH = LIST_ITR_EPA_XML;
+		Properties.TEST_ARCHIVE = false;
 
-		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(Properties.TARGET_CLASS,
-				EPAFactory.buildEPA(Properties.EPA_XML_PATH));
+		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(EPAFactory.buildEPA(Properties.EPA_XML_PATH));
 		List<EPATransitionCoverageTestFitness> goals = factory.getCoverageGoals();
 		assertEquals(69, goals.size());
 
@@ -102,8 +102,9 @@ public class TestEPAGoalsListItr extends TestEPATransitionCoverage {
 
 		EPATransitionCoverageSuiteFitness epaFitness = new EPATransitionCoverageSuiteFitness(LIST_ITR_EPA_XML);
 		suite.addFitness(epaFitness);
+		final int totalGoals = 69;
 		double suiteFitness = epaFitness.getFitness(suite);
-		assertEquals(67.0, suiteFitness, 0.000000001);
+		assertEquals(1-(2d/totalGoals), suiteFitness, 0.000000001);
 		assertTrue(suiteFitness == suite.getFitness());
 
 		ExecutionResult execResult = testChromosome.executeForFitnessFunction(epaFitness);

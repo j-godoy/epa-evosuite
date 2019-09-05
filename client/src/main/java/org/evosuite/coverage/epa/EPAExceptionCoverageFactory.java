@@ -14,14 +14,16 @@ import org.evosuite.testsuite.AbstractFitnessFactory;
 
 public class EPAExceptionCoverageFactory extends AbstractFitnessFactory<EPAExceptionCoverageTestFitness> {
 	
-	public static int UPPER_BOUND_OF_GOALS;
+	public static long UPPER_BOUND_OF_GOALS;
+	private static EPA EPA;
 
 	public EPAExceptionCoverageFactory(EPA epaAutomata) {
 		// consider normal actions and exceptional actions
-		int numberOfAutomataActions = epaAutomata.getActions().size() * 2;
+		int numberOfAutomataActions = epaAutomata.getActions().size();//exceptional actions
 		int maxNumberOfAutomataStates = epaAutomata.getStates().size();
-		int maxNumberOfAutomataTransitions = (maxNumberOfAutomataStates * numberOfAutomataActions * maxNumberOfAutomataStates);
-		UPPER_BOUND_OF_GOALS = maxNumberOfAutomataTransitions;
+		long maxNumberOfAutomataTransitions = (maxNumberOfAutomataStates * numberOfAutomataActions * maxNumberOfAutomataStates);
+		UPPER_BOUND_OF_GOALS = maxNumberOfAutomataTransitions + epaAutomata.getTransitions().size();
+		EPA = epaAutomata;
 	}
 
 	@Override
@@ -46,7 +48,10 @@ public class EPAExceptionCoverageFactory extends AbstractFitnessFactory<EPAExcep
 					if (epa_transition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
 						break;
 					}
-					 
+					
+					if(epa_transition instanceof EPANormalTransition && !EPA.getTransitions().contains(epa_transition))
+						break; // only consider normal actions in the EPA automata
+
 					String action_name = epa_transition.getActionName();
 					EPAExceptionCoverageGoal epaExceptionGoal = new EPAExceptionCoverageGoal(Properties.TARGET_CLASS, epa_transition.getOriginState(),
 							action_name, epa_transition.getDestinationState());

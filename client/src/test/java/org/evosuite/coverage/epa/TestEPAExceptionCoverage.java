@@ -60,7 +60,8 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 
 		EPA epa = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 		new EPAExceptionCoverageFactory(epa);
-		assertEquals(96, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
+		final int totalGoals = 57; 
+		assertEquals(totalGoals, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
 
 		DefaultTestCase test = createTestCase0();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -86,7 +87,7 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 
 		suite.addFitness(epaFitness);
 		double suiteFitness = epaFitness.getFitness(suite);
-		assertEquals(93.0, suiteFitness, 0.000000001);
+		assertEquals(1-(3d/totalGoals), suiteFitness, 0.000000001);
 
 	}
 
@@ -100,7 +101,8 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 
 		EPA epa = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 		new EPAExceptionCoverageFactory(epa);
-		assertEquals(96, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
+		int totalGoals = 57;
+		assertEquals(totalGoals, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
 
 		DefaultTestCase test = createTestCase1();
 		TestSuiteChromosome suite = new TestSuiteChromosome();
@@ -123,7 +125,7 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 
 		suite.addFitness(epaFitness);
 		double suiteFitness = epaFitness.getFitness(suite);
-		assertEquals(94.0, suiteFitness, 0.000000001);
+		assertEquals(1-(2d/totalGoals), suiteFitness, 0.000000001);
 	}
 
 	/**
@@ -188,9 +190,8 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 		EPA epa = EPAFactory.buildEPA(Properties.EPA_XML_PATH);
 		new EPAExceptionCoverageFactory(epa);
 //		List<EPAExceptionCoverageTestFitness> goals = factory.getCoverageGoals();
-		int expected_exceptional_transitions = (epa.getStates().size()) * epa.getActions().size() * 2
-				* (epa.getStates().size());
-		assertEquals(96, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
+		int expected_exceptional_transitions = (epa.getStates().size()) * epa.getActions().size()
+				* (epa.getStates().size()) + epa.getTransitions().size();
 		assertEquals(expected_exceptional_transitions, EPAExceptionCoverageFactory.UPPER_BOUND_OF_GOALS);
 
 		DefaultTestCase test0 = createTestCase0();
@@ -203,7 +204,7 @@ public class TestEPAExceptionCoverage extends TestEPATransitionCoverage {
 				MINI_BOUNDED_STACK_EPA_XML);
 		suite.addFitness(epaExceptionFitness);
 		double suiteFitness = epaExceptionFitness.getFitness(suite);
-		assertEquals(expected_exceptional_transitions - 4, suiteFitness, 0.000000001);
+		assertEquals(1-(4d/expected_exceptional_transitions), suiteFitness, 0.000000001);
 	}
 
 }

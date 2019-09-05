@@ -48,6 +48,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testSingleTrace() throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Properties.TARGET_CLASS = MyBoundedStack.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		EPATestCaseBuilder builder = new EPATestCaseBuilder();
 
@@ -83,7 +84,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 3;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -95,6 +96,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testLongerSingleTrace() throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Properties.TARGET_CLASS = MyBoundedStack.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		EPATestCaseBuilder builder = new EPATestCaseBuilder();
 
@@ -141,7 +143,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 7;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -152,6 +154,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testException() throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Properties.TARGET_CLASS = MyBoundedStack.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		Class<?> clazz = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
 		Constructor<?> constructor = clazz.getConstructor();
@@ -178,7 +181,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 1;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -189,6 +192,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testOnlyConstructor() throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Properties.TARGET_CLASS = MyBoundedStack.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		Class<?> clazz = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
 		Constructor<?> constructor = clazz.getConstructor();
@@ -213,7 +217,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 1;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -225,6 +229,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testTwoStacks() throws NoSuchMethodException, SecurityException, ClassNotFoundException {
 		Properties.TARGET_CLASS = MyBoundedStack.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		Class<?> clazz = TestGenerationContext.getInstance().getClassLoaderForSUT().loadClass(Properties.TARGET_CLASS);
 		Constructor<?> constructor = clazz.getConstructor();
@@ -256,7 +261,7 @@ public class TestEPAFitnessMyBoundedStack extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 2;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 

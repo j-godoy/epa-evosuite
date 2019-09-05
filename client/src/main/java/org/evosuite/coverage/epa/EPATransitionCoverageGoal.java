@@ -37,7 +37,7 @@ public class EPATransitionCoverageGoal implements Serializable, Comparable<EPATr
 		String actionName = transition.getActionName();
 		String methodName;
 		if (actionName.contains("(")) {
-			methodName = actionName.split("(")[0];
+			methodName = actionName.split("\\(")[0];
 		} else {
 			methodName = actionName;
 		}

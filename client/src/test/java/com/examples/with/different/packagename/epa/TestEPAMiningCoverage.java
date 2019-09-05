@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 import org.evosuite.Properties;
 import org.evosuite.TestGenerationContext;
 import org.evosuite.Properties.Criterion;
-import org.evosuite.coverage.epa.EPAMiningCoverageSuiteFitness;
+import org.evosuite.coverage.epa.EPATransitionMiningCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPATestCaseBuilder;
 import org.evosuite.coverage.epa.TestEPACoverage;
 import org.evosuite.testcase.DefaultTestCase;
@@ -20,7 +20,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 
 	@Override
 	protected Criterion[] getCriteria() {
-		return new Criterion[] { Criterion.EPAMINING };
+		return new Criterion[] { Criterion.EPATRANSITIONMINING };
 	}
 
 	@Test
@@ -35,7 +35,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);
@@ -67,7 +67,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);
@@ -99,7 +99,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);
@@ -132,7 +132,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);
@@ -164,7 +164,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);
@@ -196,7 +196,7 @@ public class TestEPAMiningCoverage extends TestEPACoverage {
 		TestSuiteChromosome suite = new TestSuiteChromosome();
 		suite.addTest(tc);
 
-		EPAMiningCoverageSuiteFitness epaMiningFitness = new EPAMiningCoverageSuiteFitness();
+		EPATransitionMiningCoverageSuiteFitness epaMiningFitness = new EPATransitionMiningCoverageSuiteFitness();
 
 		suite.addFitness(epaMiningFitness);
 		double fitnessValue = epaMiningFitness.getFitness(suite);

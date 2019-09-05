@@ -32,8 +32,8 @@ public class EPAAdjacentEdgesCoverageSuiteFitness extends TestSuiteFitnessFuncti
 	}
 
 	@Override
-	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suiteChromosome) {
-		final List<ExecutionResult> executionResults = runTestSuite(suiteChromosome);
+	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suite) {
+		final List<ExecutionResult> executionResults = runTestSuite(suite);
 		EPAAdjacentEdgesCoverageSuiteFitness contextFitness = this;
 
 		Set<EPAAdjacentEdgesCoverageTestFitness> goalsCoveredByResult = EPAAdjacentEdgesCoverageFactory.calculateEPAAdjacentEdgesInfo(executionResults, contextFitness);
@@ -41,8 +41,8 @@ public class EPAAdjacentEdgesCoverageSuiteFitness extends TestSuiteFitnessFuncti
 		if (Properties.TEST_ARCHIVE) {
 			// If we are using the archive, then fitness is by definition 0
 			// as all assertions already covered are in the archive
-			suiteChromosome.setFitness(this, 0.0);
-			suiteChromosome.setCoverage(this, 1.0);
+			suite.setFitness(this, 0.0);
+			suite.setCoverage(this, 1.0);
 			maxEPAAdjacentEdgesGoalsCovered = EPAAdjacentEdgesCoverageFactory.getGoals().size();
 			return 0.0;
 		}
@@ -60,19 +60,14 @@ public class EPAAdjacentEdgesCoverageSuiteFitness extends TestSuiteFitnessFuncti
 			maxEPAAdjacentEdgesGoalsCovered = numCoveredGoals;
 		}
 
-		// We cannot set a coverage here, as it does not make any sense
-		// suiteChromosome.setCoverage(this, 1.0);
-		double epaAdjacentEdgesCoverageFitness = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS - numCoveredGoals;
-
-		suiteChromosome.setFitness(this, epaAdjacentEdgesCoverageFitness);
-		if (maxEPAAdjacentEdgesGoalsCovered > 0)
-			suiteChromosome.setCoverage(this, numCoveredGoals / maxEPAAdjacentEdgesGoalsCovered);
-		else
-			suiteChromosome.setCoverage(this, 1.0);
-
-		suiteChromosome.setNumOfCoveredGoals(this, numCoveredGoals);
-		suiteChromosome.setNumOfNotCoveredGoals(this, numUncoveredGoals);
-		return epaAdjacentEdgesCoverageFitness;
+//		double epaAdjacentEdgesCoverageFitness = EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS - numCoveredGoals;
+		final double coverage = numCoveredGoals / (double) EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
+		final double fitness = (1 - coverage);
+		updateIndividual(this, suite, fitness);
+		suite.setCoverage(this, coverage);
+		suite.setNumOfCoveredGoals(this, numCoveredGoals);
+		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
+		return fitness;
 	}
 	
 }

@@ -57,6 +57,7 @@ public class TestEPAFitnessListItr2 extends TestEPATransitionCoverage {
 		final File epaXMLFile = new File(xmlFilename);
 
 		Properties.TARGET_CLASS = ListItr.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase tc = buildTestCase0();
 
@@ -75,14 +76,14 @@ public class TestEPAFitnessListItr2 extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 2;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
 		double suiteFitness = suite.getFitness();
 		assertTrue(suiteFitness == fitnessValue);
 
-		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(Properties.TARGET_CLASS, EPAFactory.buildEPA(xmlFilename));
+		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(EPAFactory.buildEPA(xmlFilename));
 		List<EPATransitionCoverageTestFitness> goals = factory.getCoverageGoals();
 		assertEquals(69, goals.size());
 

@@ -36,12 +36,11 @@ import org.evosuite.coverage.TestFitnessFactory;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageFactory;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesCoverageTestFitness;
 import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageFactory;
-import org.evosuite.coverage.epa.EPAAdjacentEdgesMiningCoverageTestFitness;
 import org.evosuite.coverage.epa.EPAExceptionCoverageFactory;
 import org.evosuite.coverage.epa.EPAExceptionCoverageTestFitness;
 import org.evosuite.coverage.epa.EPAExceptionMiningCoverageFactory;
 import org.evosuite.coverage.epa.EPAExceptionMiningCoverageTestFitness;
-import org.evosuite.coverage.epa.EPAMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPATransitionMiningCoverageFactory;
 import org.evosuite.coverage.epa.EPAMiningCoverageTestFitness;
 import org.evosuite.coverage.mutation.Mutation;
 import org.evosuite.coverage.mutation.MutationObserver;
@@ -475,7 +474,7 @@ public class CoverageAnalysis {
 		//TODO: chequear si es necesario, sino, sacar
 		// I need to populate the covered goals for criteria that construct goals on demand
 		List<ExecutionResult> executionResults = new ArrayList<>();
-		if(criterion == Criterion.EPAEXCEPTION || criterion == Criterion.EPAADJACENTEDGES || criterion == Criterion.EPAMINING
+		if(criterion == Criterion.EPAEXCEPTION || criterion == Criterion.EPAADJACENTEDGES || criterion == Criterion.EPATRANSITIONMINING
 				|| criterion == Criterion.EPAEXCEPTIONMINING || criterion == Criterion.EPAADJACENTEDGESMINING) {
 			for (int index_test = 0; index_test < results.size(); index_test++) {
 				JUnitResult tR = results.get(index_test);
@@ -499,10 +498,10 @@ public class CoverageAnalysis {
 					goals = new ArrayList<EPAAdjacentEdgesCoverageTestFitness>(EPAAdjacentEdgesCoverageFactory.getGoals().values());
 					totalGoals += EPAAdjacentEdgesCoverageFactory.UPPER_BOUND_OF_GOALS;
 					break;
-				case EPAMINING:
-					EPAMiningCoverageFactory.calculateEPAMiningInfo(executionResults, null);
-					goals = new ArrayList<EPAMiningCoverageTestFitness>(EPAMiningCoverageFactory.getGoals().values());
-					totalGoals += EPAMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+				case EPATRANSITIONMINING:
+					EPATransitionMiningCoverageFactory.calculateEPAMiningInfo(executionResults, null);
+					goals = new ArrayList<EPAMiningCoverageTestFitness>(EPATransitionMiningCoverageFactory.getGoals().values());
+					totalGoals += EPATransitionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
 					break;
 				case EPAEXCEPTIONMINING:
 					EPAExceptionMiningCoverageFactory.calculateEPAExceptionMiningInfo(executionResults, null);
@@ -511,8 +510,8 @@ public class CoverageAnalysis {
 					break;
 				case EPAADJACENTEDGESMINING:
 					EPAAdjacentEdgesMiningCoverageFactory.calculateEPAAdjacentEdgesMiningInfo(executionResults, null);
-					goals = new ArrayList<EPAAdjacentEdgesMiningCoverageTestFitness>(EPAAdjacentEdgesMiningCoverageFactory.getGoals().values());
-					totalGoals += EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+					goals = new ArrayList<EPAAdjacentEdgesCoverageTestFitness>(EPAAdjacentEdgesMiningCoverageFactory.getGoals().values());
+					totalGoals += EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS.longValue();
 					break;
 				default:
 					break;

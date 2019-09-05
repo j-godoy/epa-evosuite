@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -61,7 +62,7 @@ public class JUnitAnalyzer {
 
 	private static Logger logger = LoggerFactory.getLogger(JUnitAnalyzer.class);
 
-	private static int dirCounter = 0;
+	private static AtomicInteger dirCounter = new AtomicInteger();
 
 	private static final String JAVA = ".java";
 	private static final String CLASS = ".class";
@@ -219,7 +220,7 @@ public class JUnitAnalyzer {
 					logger.info(elem);
 				}
 
-				boolean toRemove = !(failure.isAssertionError());
+//				boolean toRemove = !(failure.isAssertionError());
 
 				for (int i = 0; i < tests.size(); i++) {
 					if (TestSuiteWriterUtils.getNameOfTest(tests, i).equals(testName)) {
@@ -235,13 +236,13 @@ public class JUnitAnalyzer {
 						 * should delete it, as it would either represent a bug
 						 * in EvoSuite or something we cannot (easily) fix here
 						 */
-						if (!toRemove) {
-							logger.debug("Going to mark test as unstable: " + testName);
-							tests.get(i).setUnstable(true);
-						} else {
+//						if (!toRemove) {
+//							logger.debug("Going to mark test as unstable: " + testName);
+//							tests.get(i).setUnstable(true);
+//						} else {
 							logger.debug("Going to remove unstable test: " + testName);
 							tests.remove(i);
-						}
+//						}
 						break;
 					}
 				}
@@ -327,7 +328,7 @@ public class JUnitAnalyzer {
 
 	// We have to have a unique name for this test suite as it is loaded by the
 	// EvoSuite classloader, and thus cannot easily be re-loaded
-	private static int NUM = 0;
+	private static AtomicInteger NUM = new AtomicInteger();
 
 	private static List<File> compileTests(List<TestCase> tests, File dir) {
 
@@ -337,11 +338,11 @@ public class JUnitAnalyzer {
 		// to get name, remove all package before last '.'
 		int beginIndex = Properties.TARGET_CLASS.lastIndexOf(".") + 1;
 		String name = Properties.TARGET_CLASS.substring(beginIndex);
-		name += "_" + (NUM++) + "_tmp_" + Properties.JUNIT_SUFFIX; // postfix
+		name += "_" + (NUM.getAndIncrement()) + "_tmp_" + Properties.JUNIT_SUFFIX; // postfix
 
 		try {
 			// now generate the JUnit test case
-			List<File> generated = suite.writeTestSuite(name, dir.getAbsolutePath(), Collections.EMPTY_LIST);
+			List<File> generated = suite.writeTestSuite(name, dir.getAbsolutePath(), Collections.emptyList());
 			for (File file : generated) {
 				if (!file.exists()) {
 					logger.error("Supposed to generate " + file + " but it does not exist");
@@ -444,8 +445,8 @@ public class JUnitAnalyzer {
 
 	protected static File createNewTmpDir() {
 		File dir = null;
-		String dirName = FileUtils.getTempDirectoryPath() + File.separator + "EvoSuite_" + (dirCounter++) + "_"
-				+ +System.currentTimeMillis();
+		String dirName = FileUtils.getTempDirectoryPath() + File.separator + "EvoSuite_" + (dirCounter.getAndIncrement()) + "_"
+				+ System.currentTimeMillis();
 
 		// first create a tmp folder
 		dir = new File(dirName);

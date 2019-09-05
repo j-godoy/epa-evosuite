@@ -19,6 +19,8 @@
  */
 package org.evosuite.coverage.epa;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Set;
 
@@ -46,11 +48,9 @@ public class EPAAdjacentEdgesMiningCoverageSuiteFitness extends TestSuiteFitness
 	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suite) {
 		logger.trace("Calculating EPAAdjacentPairs Mining fitness");
 
-		int totalGoals = EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
-
 		List<ExecutionResult> results = runTestSuite(suite);
 		EPAAdjacentEdgesMiningCoverageSuiteFitness contextFitness = this;
-		Set<EPAAdjacentEdgesMiningCoverageTestFitness> goalsCoveredByResult = EPAAdjacentEdgesMiningCoverageFactory.calculateEPAAdjacentEdgesMiningInfo(results, contextFitness);
+		Set<EPAAdjacentEdgesCoverageTestFitness> goalsCoveredByResult = EPAAdjacentEdgesMiningCoverageFactory.calculateEPAAdjacentEdgesMiningInfo(results, contextFitness);
 
 		if (Properties.TEST_ARCHIVE) {
 			// If we are using the archive, then fitness is by definition 0
@@ -63,30 +63,28 @@ public class EPAAdjacentEdgesMiningCoverageSuiteFitness extends TestSuiteFitness
 
 		int numCoveredGoals = goalsCoveredByResult.size();
 		int numUncoveredGoals = 0;
-		for (EPAAdjacentEdgesMiningCoverageTestFitness knownCoverageGoal : EPAAdjacentEdgesMiningCoverageFactory.getGoals().values()) {
+		for (EPAAdjacentEdgesCoverageTestFitness knownCoverageGoal : EPAAdjacentEdgesMiningCoverageFactory.getGoals().values()) {
 			if (!goalsCoveredByResult.contains(knownCoverageGoal)) {
 				numUncoveredGoals++;
 			}
 		}
 
 		if (numCoveredGoals > maxEPAAdjacentEdgesMiningGoalsCovered) {
-			logger.info("(AdjacentPairs) Best individual covers " + numCoveredGoals + " transitions");
+			logger.info("(Adjacent Edges Pairs Mining) Best individual covers " + numCoveredGoals + " transitions");
 			maxEPAAdjacentEdgesMiningGoalsCovered = numCoveredGoals;
 		}
 
 		// We cannot set a coverage here, as it does not make any sense
 		// suite.setCoverage(this, 1.0);
-		double epaAdjacentEdgesMiningCoverageFitness = totalGoals - numCoveredGoals;
-
-		suite.setFitness(this, epaAdjacentEdgesMiningCoverageFitness);
-		if (maxEPAAdjacentEdgesMiningGoalsCovered > 0)
-			suite.setCoverage(this, numCoveredGoals / maxEPAAdjacentEdgesMiningGoalsCovered);
-		else
-			suite.setCoverage(this, 1.0);
-
+//		double epaAdjacentEdgesMiningCoverageFitness = totalGoals - numCoveredGoals;
+//		double epaAdjacentEdgesMiningCoverageFitness = 1d / (1d + numCoveredGoals);
+		final double coverage = BigDecimal.valueOf(numCoveredGoals).divide(new BigDecimal(EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS.toString()), 10, RoundingMode.HALF_EVEN).doubleValue();
+		final double fitness = (1 - coverage);
+		updateIndividual(this, suite, fitness);
+		suite.setCoverage(this, coverage);
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
-		return epaAdjacentEdgesMiningCoverageFitness;
+		return fitness;
 	}
 
 }

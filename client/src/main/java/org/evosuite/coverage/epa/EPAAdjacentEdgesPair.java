@@ -108,7 +108,6 @@ public class EPAAdjacentEdgesPair implements Serializable {
 				// final state first transition == initial state second transition. Ex:
 				// first transition  = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
 				// second transition = EPANormalTransition{EPAState{name='S0'},Socket,EPAState{name='S1'}}
-				// when 2 diferent EpaAction has same name
 				if(!firstEpaTransition.getDestinationState().equals(secondEpaTransition.getOriginState()))
 					break;
 				pairsOfExecutionResult.add(new EPAAdjacentEdgesPair(firstEpaTransition, secondEpaTransition));

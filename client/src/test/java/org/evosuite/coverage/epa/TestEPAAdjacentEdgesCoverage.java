@@ -64,7 +64,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 3;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -85,7 +85,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 3;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -106,7 +106,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 2;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -127,7 +127,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 1;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -148,7 +148,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 1;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -169,7 +169,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 0;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 
@@ -229,7 +229,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 2;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	
@@ -250,7 +250,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 		suite.addFitness(adjacentEdgesFitness);
 		double suiteFitness = adjacentEdgesFitness.getFitness(suite);
 		int expectedNumOfCoveredGoals = 1;
-		long expectedSuiteFitness = numOfAdjacentEdgesGoals - expectedNumOfCoveredGoals;
+		double expectedSuiteFitness = 1 - (expectedNumOfCoveredGoals / (double) numOfAdjacentEdgesGoals);
 		assertEquals(expectedSuiteFitness, suiteFitness, 0.000000001);
 	}
 	

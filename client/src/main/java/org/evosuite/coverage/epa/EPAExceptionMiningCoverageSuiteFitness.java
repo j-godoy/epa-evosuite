@@ -21,6 +21,7 @@ package org.evosuite.coverage.epa;
 
 import java.util.List;
 import java.util.Set;
+
 import org.evosuite.Properties;
 import org.evosuite.testcase.ExecutableChromosome;
 import org.evosuite.testcase.execution.ExecutionResult;
@@ -44,8 +45,6 @@ public class EPAExceptionMiningCoverageSuiteFitness extends TestSuiteFitnessFunc
 	@Override
 	public double getFitness(AbstractTestSuiteChromosome<? extends ExecutableChromosome> suite) {
 		logger.trace("Calculating EPAException Mining fitness");
-
-		int maxNumberOfAutomataTransitions = EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
 
 		List<ExecutionResult> results = runTestSuite(suite);
 		EPAExceptionMiningCoverageSuiteFitness contextFitness = this;
@@ -75,17 +74,15 @@ public class EPAExceptionMiningCoverageSuiteFitness extends TestSuiteFitnessFunc
 
 		// We cannot set a coverage here, as it does not make any sense
 		// suite.setCoverage(this, 1.0);
-		double epaExceptionMiningCoverageFitness = maxNumberOfAutomataTransitions - numCoveredGoals;
-
-		suite.setFitness(this, epaExceptionMiningCoverageFitness);
-		if (maxEPAExceptionMiningGoalsCovered > 0)
-			suite.setCoverage(this, numCoveredGoals / maxEPAExceptionMiningGoalsCovered);
-		else
-			suite.setCoverage(this, 1.0);
-
+//		double epaExceptionMiningCoverageFitness = maxNumberOfAutomataTransitions - numCoveredGoals;
+//		double epaExceptionMiningCoverageFitness = 1d / (1d + numCoveredGoals);
+		final double coverage = (double) numCoveredGoals / EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+		final double fitness = (1 - coverage);
+		updateIndividual(this, suite, fitness);
+		suite.setCoverage(this, coverage);
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
-		return epaExceptionMiningCoverageFitness;
+		return fitness;
 	}
 
 }

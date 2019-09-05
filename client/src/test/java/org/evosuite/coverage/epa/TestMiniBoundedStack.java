@@ -56,9 +56,9 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPATRANSITION };
+		Properties.TEST_ARCHIVE = false;
 
-		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(Properties.TARGET_CLASS,
-				EPAFactory.buildEPA(Properties.EPA_XML_PATH));
+		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(EPAFactory.buildEPA(Properties.EPA_XML_PATH));
 		List<EPATransitionCoverageTestFitness> goals = factory.getCoverageGoals();
 		assertEquals(9, goals.size());
 
@@ -86,7 +86,7 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 		
 		suite.addFitness(epaFitness);
 		double suiteFitness = epaFitness.getFitness(suite);
-		assertEquals(7.0, suiteFitness, 0.000000001);
+		assertEquals(1-(2d/9d), suiteFitness, 0.000000001);
 
 	}
 
@@ -96,9 +96,9 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPATRANSITION };
+		Properties.TEST_ARCHIVE = false;
 
-		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(Properties.TARGET_CLASS,
-				EPAFactory.buildEPA(Properties.EPA_XML_PATH));
+		EPATransitionCoverageFactory factory = new EPATransitionCoverageFactory(EPAFactory.buildEPA(Properties.EPA_XML_PATH));
 		List<EPATransitionCoverageTestFitness> goals = factory.getCoverageGoals();
 		assertEquals(9, goals.size());
 
@@ -124,7 +124,7 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 		
 		suite.addFitness(epaFitness);
 		double suiteFitness = epaFitness.getFitness(suite);
-		assertEquals(8.0, suiteFitness, 0.000000001);
+		assertEquals(1-(1d/9d), suiteFitness, 0.000000001);
 	}
 
 	/**

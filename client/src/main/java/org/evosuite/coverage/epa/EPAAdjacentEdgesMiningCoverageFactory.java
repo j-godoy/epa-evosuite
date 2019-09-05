@@ -1,5 +1,6 @@
 package org.evosuite.coverage.epa;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -12,34 +13,34 @@ import org.evosuite.coverage.archive.TestsArchive;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testsuite.AbstractFitnessFactory;
 
-public class EPAAdjacentEdgesMiningCoverageFactory extends AbstractFitnessFactory<EPAAdjacentEdgesMiningCoverageTestFitness> {
+public class EPAAdjacentEdgesMiningCoverageFactory extends AbstractFitnessFactory<EPAAdjacentEdgesCoverageTestFitness> {
 
-    private static Map<String, EPAAdjacentEdgesMiningCoverageTestFitness> goals = new LinkedHashMap<>();
+    private static Map<String, EPAAdjacentEdgesCoverageTestFitness> goals = new LinkedHashMap<>();
     
-    public static int UPPER_BOUND_OF_GOALS;
+    public static BigInteger UPPER_BOUND_OF_GOALS;
 
     public EPAAdjacentEdgesMiningCoverageFactory() {
     	int numberOfAutomataActions = EPAUtils.checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize();
-		int maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
-		int maxNumberOfAutomataTransitions = maxNumberOfAutomataStates * numberOfAutomataActions * maxNumberOfAutomataStates;
-		int maxNumOfDepartingEdges = numberOfAutomataActions * maxNumberOfAutomataStates;
-		UPPER_BOUND_OF_GOALS = (maxNumberOfAutomataTransitions * maxNumOfDepartingEdges) * 2;
+		long maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
+		BigInteger maxNumberOfAutomataTransitions = BigInteger.valueOf(maxNumberOfAutomataStates).multiply(BigInteger.valueOf(numberOfAutomataActions)).multiply(BigInteger.valueOf(maxNumberOfAutomataStates));
+		BigInteger maxNumOfDepartingEdges = BigInteger.valueOf(numberOfAutomataActions).multiply(BigInteger.valueOf(maxNumberOfAutomataStates));
+		UPPER_BOUND_OF_GOALS = maxNumberOfAutomataTransitions.multiply(maxNumOfDepartingEdges).multiply(BigInteger.valueOf(2));
 	}
 
-    public static Map<String, EPAAdjacentEdgesMiningCoverageTestFitness> getGoals() {
+    public static Map<String, EPAAdjacentEdgesCoverageTestFitness> getGoals() {
         return goals;
     }
 
     /** {@inheritDoc} */
 	@Override
-	public List<EPAAdjacentEdgesMiningCoverageTestFitness> getCoverageGoals() {
-		return new ArrayList<EPAAdjacentEdgesMiningCoverageTestFitness>(goals.values());
+	public List<EPAAdjacentEdgesCoverageTestFitness> getCoverageGoals() {
+		return new ArrayList<EPAAdjacentEdgesCoverageTestFitness>(goals.values());
 	}
 	
-	public static Set<EPAAdjacentEdgesMiningCoverageTestFitness> calculateEPAAdjacentEdgesMiningInfo(List<ExecutionResult> results,
+	public static Set<EPAAdjacentEdgesCoverageTestFitness> calculateEPAAdjacentEdgesMiningInfo(List<ExecutionResult> results,
 			EPAAdjacentEdgesMiningCoverageSuiteFitness contextFitness) {
 
-		Set<EPAAdjacentEdgesMiningCoverageTestFitness> goalsCoveredByResults = new HashSet<>();
+		Set<EPAAdjacentEdgesCoverageTestFitness> goalsCoveredByResults = new HashSet<>();
 
 		for (ExecutionResult result : results) {
 			
@@ -53,9 +54,9 @@ public class EPAAdjacentEdgesMiningCoverageFactory extends AbstractFitnessFactor
 					// discard the rest of the trace if an invalid object state is reached
 					break;
 				}
-				
-				EPAAdjacentEdgesMiningCoverageTestFitness goal = new EPAAdjacentEdgesMiningCoverageTestFitness(Properties.TARGET_CLASS,
+				EPAAdjacentEdgesCoverageGoal g = new EPAAdjacentEdgesCoverageGoal(Properties.TARGET_CLASS,
 						firstTransition, secondTransition);
+				EPAAdjacentEdgesCoverageTestFitness goal = new EPAAdjacentEdgesCoverageTestFitness(g);
 				
 				if (!goalsCoveredByResults.contains(goal)) {
 					goalsCoveredByResults.add(goal);

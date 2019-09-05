@@ -19,10 +19,8 @@ import org.evosuite.Properties;
 import org.evosuite.TestGenerationContext;
 import org.evosuite.testcase.DefaultTestCase;
 import org.evosuite.testcase.ExecutableChromosome;
-import org.evosuite.testcase.execution.ExecutionObserver;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testcase.execution.ExecutionTrace;
-import org.evosuite.testcase.execution.TestCaseExecutor;
 import org.evosuite.testcase.variable.VariableReference;
 import org.evosuite.testsuite.TestSuiteChromosome;
 import org.junit.After;
@@ -46,6 +44,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		Assume.assumeTrue(epaXMLFile.exists());
 
 		Properties.TARGET_CLASS = ListItr.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase tc = buildTestCase0();
 
@@ -64,7 +63,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 2;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -161,6 +160,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 
 		Properties.EPA_XML_PATH = xmlFilename;
 		Properties.TARGET_CLASS = ListItr.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase tc = buildTestCase0();
 
@@ -176,7 +176,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 2;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -207,7 +207,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		int expectedCoveredTransitions = 0;
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = expectedCoveredTransitions / (double) expectedTotalTransitions;
 
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
@@ -257,6 +257,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		Assume.assumeTrue(epaXMLFile.exists());
 
 		Properties.TARGET_CLASS = ListItr.class.getName();
+		Properties.TEST_ARCHIVE = false;
 
 		DefaultTestCase tc = buildTestCase2();
 
@@ -276,7 +277,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		assertEquals(1, results.size());
 		ExecutionResult execResult = results.get(0);
 		ExecutionTrace execTrace = execResult.getTrace();
-		Collection<Throwable> thrownExceptions = execResult.getAllThrownExceptions();
+//		Collection<Throwable> thrownExceptions = execResult.getAllThrownExceptions();
 
 		Set<EPATrace> epa_traces = execTrace.getEPATraces();
 		assertTrue(!epa_traces.isEmpty());
@@ -285,7 +286,7 @@ public class TestEPAFitnessListItr extends TestEPATransitionCoverage {
 		double fitnessValue = epaTransitionFitness.getFitness(suite);
 
 		// fitness is the number of uncovered EPA transitions
-		double expectedUncoveredTransitions = (double) expectedTotalTransitions - expectedCoveredTransitions;
+		double expectedUncoveredTransitions = 1 - (expectedCoveredTransitions / (double) expectedTotalTransitions);
 		assertEquals(expectedUncoveredTransitions, fitnessValue, 0.00000001);
 
 		double suiteFitnessValue = suite.getFitness();
