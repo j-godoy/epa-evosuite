@@ -56,7 +56,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.MINIMIZE = minimize;
 		Properties.STOPPING_CONDITION = StoppingCondition.MAXGENERATIONS;
 		Properties.SEARCH_BUDGET = 10;
-		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPAMINING };
+		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPATRANSITIONMINING };
 		Properties.CLIENT_ON_THREAD = true;
 
 		// check test case
@@ -69,7 +69,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Assert.assertNotNull(results);
 		GeneticAlgorithm<?> ga = getGAFromResult(results);
 
-		assertEquals(3, EPAMiningCoverageFactory.getGoals().size());
+		assertEquals(3, EPATransitionMiningCoverageFactory.getGoals().size());
 
 		TestSuiteChromosome bestIndividual = (TestSuiteChromosome) ga.getBestIndividual();
 		assertTrue(!bestIndividual.getTests().isEmpty());
@@ -119,7 +119,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.MINIMIZE = true;
 		Properties.STOPPING_CONDITION = StoppingCondition.MAXGENERATIONS;
 		Properties.SEARCH_BUDGET = 10;
-		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPAMINING };
+		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPATRANSITIONMINING };
 		Properties.CLIENT_ON_THREAD = true;
 
 		// check test case
@@ -144,7 +144,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		System.out.println(individual);
 		System.out.println("===========================");
 
-		assertEquals(8, EPAMiningCoverageFactory.getGoals().size());
+		assertEquals(8, EPATransitionMiningCoverageFactory.getGoals().size());
 
 		// Since there is an unknown number of goals to begin with, the number of goals
 		// is always 0
@@ -177,7 +177,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.MINIMIZE = true;
 		Properties.STOPPING_CONDITION = StoppingCondition.MAXGENERATIONS;
 		Properties.SEARCH_BUDGET = 60;
-		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPAMINING };
+		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPATRANSITIONMINING };
 		Properties.CLIENT_ON_THREAD = true;
 		Properties.ASSERTIONS = false;
 
@@ -206,7 +206,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.MINIMIZE = true;
 		Properties.STOPPING_CONDITION = StoppingCondition.MAXGENERATIONS;
 		Properties.SEARCH_BUDGET = 60;
-		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPAMINING };
+		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPATRANSITIONMINING };
 		Properties.CLIENT_ON_THREAD = true;
 		Properties.ASSERTIONS = false;
 		Properties.INFERRED_EPA_XML_PATH = "inferred_bounded_stack.xml";
@@ -237,7 +237,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.MINIMIZE = true;
 		Properties.STOPPING_CONDITION = StoppingCondition.MAXGENERATIONS;
 		Properties.SEARCH_BUDGET = 60;
-		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPAMINING };
+		Properties.CRITERION = new Properties.Criterion[] { Properties.Criterion.EPATRANSITIONMINING };
 		Properties.CLIENT_ON_THREAD = true;
 		Properties.ASSERTIONS = false;
 

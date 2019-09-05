@@ -44,8 +44,8 @@ import org.evosuite.coverage.epa.EPAExceptionCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPAExceptionMiningCoverageFactory;
 import org.evosuite.coverage.epa.EPAExceptionMiningCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPAFactory;
-import org.evosuite.coverage.epa.EPAMiningCoverageFactory;
-import org.evosuite.coverage.epa.EPAMiningCoverageSuiteFitness;
+import org.evosuite.coverage.epa.EPATransitionMiningCoverageFactory;
+import org.evosuite.coverage.epa.EPATransitionMiningCoverageSuiteFitness;
 import org.evosuite.coverage.epa.EPATransitionCoverageFactory;
 import org.evosuite.coverage.epa.EPATransitionCoverageSuiteFitness;
 import org.evosuite.coverage.exception.ExceptionCoverageFactory;
@@ -147,8 +147,8 @@ public class FitnessFunctions {
 			return new EPAErrorCoverageSuiteFitness(Properties.EPA_XML_PATH);
 		case EPAEXCEPTION:
 			return new EPAExceptionCoverageSuiteFitness(Properties.EPA_XML_PATH);
-		case EPAMINING:
-			return new EPAMiningCoverageSuiteFitness();
+		case EPATRANSITIONMINING:
+			return new EPATransitionMiningCoverageSuiteFitness();
 		case EPAEXCEPTIONMINING:
 			return new EPAExceptionMiningCoverageSuiteFitness();
 		case EPAADJACENTEDGESMINING:
@@ -219,13 +219,13 @@ public class FitnessFunctions {
 		case INPUT:
 			return new InputCoverageFactory();
 		case EPATRANSITION:
-			return new EPATransitionCoverageFactory(Properties.TARGET_CLASS, EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
+			return new EPATransitionCoverageFactory(EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
 		case EPAERROR:
 			return new EPAErrorCoverageFactory(Properties.TARGET_CLASS, EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
 		case EPAEXCEPTION:
 			return new EPAExceptionCoverageFactory(EPAFactory.buildEPAOrError(Properties.EPA_XML_PATH));
-		case EPAMINING:
-			return new EPAMiningCoverageFactory();
+		case EPATRANSITIONMINING:
+			return new EPATransitionMiningCoverageFactory();
 		case EPAEXCEPTIONMINING:
 			return new EPAExceptionMiningCoverageFactory();
 		case EPAADJACENTEDGESMINING:

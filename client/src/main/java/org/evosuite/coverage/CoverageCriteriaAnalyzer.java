@@ -185,8 +185,8 @@ public class CoverageCriteriaAnalyzer {
                 return RuntimeVariable.EpaErrorCoverage;
             case EPAEXCEPTION:
             	return RuntimeVariable.EpaExceptionCoverage;
-            case EPAMINING:
-            	return RuntimeVariable.EpaMiningCoverage;
+            case EPATRANSITIONMINING:
+            	return RuntimeVariable.EpaTransitionMiningCoverage;
             case EPAEXCEPTIONMINING:
             	return RuntimeVariable.EpaExceptionMiningCoverage;
             case EPAADJACENTEDGESMINING:
@@ -365,8 +365,8 @@ public class CoverageCriteriaAnalyzer {
                 return RuntimeVariable.EpaErrorCoverage;
             case EPAEXCEPTION:
             	return RuntimeVariable.EpaExceptionCoverage;
-            case EPAMINING:
-            	return RuntimeVariable.EpaMiningCoverage;
+            case EPATRANSITIONMINING:
+            	return RuntimeVariable.EpaTransitionMiningCoverage;
             case EPAEXCEPTIONMINING:
             	return RuntimeVariable.EpaExceptionMiningCoverage;
             case EPAADJACENTEDGESMINING:
