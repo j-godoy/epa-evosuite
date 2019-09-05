@@ -19,8 +19,8 @@ public class EPAAdjacentEdgesCoverageFactory extends AbstractFitnessFactory<EPAA
 	public EPAAdjacentEdgesCoverageFactory(EPA epaAutomata) {
 		int numOfStates = epaAutomata.getStates().size();
 		int numOfActions = epaAutomata.getActions().size();
-		int maxNumOfEdges = numOfStates * numOfActions * numOfStates;
-		int maxNumOfDepartingEdges = numOfActions * numOfStates;
+		long maxNumOfEdges = numOfStates * numOfActions * numOfStates;
+		long maxNumOfDepartingEdges = numOfActions * numOfStates;
 		UPPER_BOUND_OF_GOALS = (maxNumOfEdges * maxNumOfDepartingEdges) * 2;
 	}
 
