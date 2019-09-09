@@ -1,13 +1,11 @@
 package org.evosuite.coverage.epa;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.evosuite.Properties;
 import org.evosuite.coverage.archive.TestsArchive;
 import org.evosuite.testcase.execution.ExecutionResult;
@@ -17,14 +15,8 @@ public class EPAAdjacentEdgesMiningCoverageFactory extends AbstractFitnessFactor
 
     private static Map<String, EPAAdjacentEdgesCoverageTestFitness> goals = new LinkedHashMap<>();
     
-    public static BigInteger UPPER_BOUND_OF_GOALS;
-
     public EPAAdjacentEdgesMiningCoverageFactory() {
-    	int numberOfAutomataActions = EPAUtils.checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize();
-		long maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
-		BigInteger maxNumberOfAutomataTransitions = BigInteger.valueOf(maxNumberOfAutomataStates).multiply(BigInteger.valueOf(numberOfAutomataActions)).multiply(BigInteger.valueOf(maxNumberOfAutomataStates));
-		BigInteger maxNumOfDepartingEdges = BigInteger.valueOf(numberOfAutomataActions).multiply(BigInteger.valueOf(maxNumberOfAutomataStates));
-		UPPER_BOUND_OF_GOALS = maxNumberOfAutomataTransitions.multiply(maxNumOfDepartingEdges).multiply(BigInteger.valueOf(2));
+    	EPAUtils.checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize();
 	}
 
     public static Map<String, EPAAdjacentEdgesCoverageTestFitness> getGoals() {

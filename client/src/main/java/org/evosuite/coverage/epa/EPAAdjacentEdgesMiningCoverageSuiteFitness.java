@@ -19,11 +19,8 @@
  */
 package org.evosuite.coverage.epa;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import java.util.Set;
-
 import org.evosuite.Properties;
 import org.evosuite.testcase.ExecutableChromosome;
 import org.evosuite.testcase.execution.ExecutionResult;
@@ -77,11 +74,14 @@ public class EPAAdjacentEdgesMiningCoverageSuiteFitness extends TestSuiteFitness
 		// We cannot set a coverage here, as it does not make any sense
 		// suite.setCoverage(this, 1.0);
 //		double epaAdjacentEdgesMiningCoverageFitness = totalGoals - numCoveredGoals;
-//		double epaAdjacentEdgesMiningCoverageFitness = 1d / (1d + numCoveredGoals);
-		final double coverage = BigDecimal.valueOf(numCoveredGoals).divide(new BigDecimal(EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS.toString()), 10, RoundingMode.HALF_EVEN).doubleValue();
-		final double fitness = (1 - coverage);
+//		final double coverage = BigDecimal.valueOf(numCoveredGoals).divide(new BigDecimal(EPAAdjacentEdgesMiningCoverageFactory.UPPER_BOUND_OF_GOALS.toString()), 10, RoundingMode.HALF_EVEN).doubleValue();
+//		final double fitness = (1 - coverage);
+		double fitness = 1d / (1d + numCoveredGoals);
 		updateIndividual(this, suite, fitness);
-		suite.setCoverage(this, coverage);
+		if(maxEPAAdjacentEdgesMiningGoalsCovered > 0)
+			suite.setCoverage(this, numCoveredGoals / maxEPAAdjacentEdgesMiningGoalsCovered);
+		else
+        	suite.setCoverage(this, 1.0);
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
 		return fitness;

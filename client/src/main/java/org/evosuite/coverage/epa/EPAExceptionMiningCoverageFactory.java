@@ -16,13 +16,8 @@ public class EPAExceptionMiningCoverageFactory extends AbstractFitnessFactory<EP
 
     private static Map<String, EPAExceptionMiningCoverageTestFitness> goals = new LinkedHashMap<>();
     
-    public static long UPPER_BOUND_OF_GOALS;
-
     public EPAExceptionMiningCoverageFactory() {
-    	int numberOfAutomataActions = EPAUtils.checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize();
-    	long maxNumberOfAutomataStates = (int) Math.pow(2, numberOfAutomataActions);
-		long maxNumberOfAutomataTransitions = 2 * (maxNumberOfAutomataStates * numberOfAutomataActions * maxNumberOfAutomataStates);
-		UPPER_BOUND_OF_GOALS = maxNumberOfAutomataTransitions;
+    	EPAUtils.checkActionAndPreconditionsAnnotationsForMiningAndgetActionsSize();
 	}
 
     public static Map<String, EPAExceptionMiningCoverageTestFitness> getGoals() {

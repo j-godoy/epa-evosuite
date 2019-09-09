@@ -72,11 +72,14 @@ public class EPATransitionMiningCoverageSuiteFitness extends TestSuiteFitnessFun
 			maxEPAMiningGoalsCovered = numCoveredGoals;
 		}
 
-		final double coverage = (double) numCoveredGoals / EPATransitionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
-//		double epaMiningCoverageFitness = 1d / (1d + numCoveredGoals);
-		final double fitness = (1 - coverage);
+//		final double coverage = (double) numCoveredGoals / EPATransitionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+//		final double fitness = (1 - coverage);
+		final double fitness = 1d / (1d + numCoveredGoals);
 		updateIndividual(this, suite, fitness);
-		suite.setCoverage(this, coverage);
+		if(maxEPAMiningGoalsCovered > 0)
+			suite.setCoverage(this, numCoveredGoals / maxEPAMiningGoalsCovered);
+		else
+        	suite.setCoverage(this, 1.0);
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
 		return fitness;

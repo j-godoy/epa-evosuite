@@ -75,11 +75,14 @@ public class EPAExceptionMiningCoverageSuiteFitness extends TestSuiteFitnessFunc
 		// We cannot set a coverage here, as it does not make any sense
 		// suite.setCoverage(this, 1.0);
 //		double epaExceptionMiningCoverageFitness = maxNumberOfAutomataTransitions - numCoveredGoals;
-//		double epaExceptionMiningCoverageFitness = 1d / (1d + numCoveredGoals);
-		final double coverage = (double) numCoveredGoals / EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
-		final double fitness = (1 - coverage);
+		double fitness = 1d / (1d + numCoveredGoals);
+//		final double coverage = (double) numCoveredGoals / EPAExceptionMiningCoverageFactory.UPPER_BOUND_OF_GOALS;
+//		final double fitness = (1 - coverage);
 		updateIndividual(this, suite, fitness);
-		suite.setCoverage(this, coverage);
+		if(maxEPAExceptionMiningGoalsCovered > 0)
+			suite.setCoverage(this, numCoveredGoals / maxEPAExceptionMiningGoalsCovered);
+		else
+        	suite.setCoverage(this, 1.0);
 		suite.setNumOfCoveredGoals(this, numCoveredGoals);
 		suite.setNumOfNotCoveredGoals(this, numUncoveredGoals);
 		return fitness;
