@@ -8,18 +8,24 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.evosuite.Properties;
-import org.evosuite.TestGenerationContext;
 import org.evosuite.Properties.Criterion;
+import org.evosuite.TestGenerationContext;
 import org.evosuite.epa.EpaAction;
 import org.evosuite.epa.EpaActionPrecondition;
+import org.evosuite.testcase.TestChromosome;
 import org.evosuite.testcase.execution.EvosuiteError;
+import org.evosuite.testcase.execution.ExecutionResult;
+import org.evosuite.testcase.execution.TestCaseExecutor;
+import org.evosuite.testsuite.TestSuiteChromosome;
 import org.evosuite.utils.ArrayUtil;
+import org.evosuite.utils.FileIOUtils;
 
 /**
  * EPA-related utilities
@@ -296,6 +302,54 @@ public class EPAUtils {
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAERROR)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAEXCEPTION)
 				|| ArrayUtil.contains(Properties.CRITERION, Criterion.EPAADJACENTEDGES);
+	}
+	
+	public static void saveInferredEPA(TestSuiteChromosome testSuite, String pathToSaveEPA)
+	{
+		//Debe generar el xml de la epa antes de llamar a analyzeCoverage porque pierde la instrumentación para
+		// tener los callbacks a EPAMonitor
+		if (pathToSaveEPA != null) {
+			Set<EPATrace> traces = new HashSet<EPATrace>();
+			for (TestChromosome test : testSuite.getTestChromosomes()) {
+				// delete all statements leading to security exceptions
+				ExecutionResult result = test.getLastExecutionResult();
+				if (result == null) {
+					result = TestCaseExecutor.runTest(test.getTestCase());
+				}
+				Set<EPATrace> resultTraces = result.getTrace().getEPATraces();
+				traces.addAll(resultTraces);
+			}
+			saveInferredEPA(traces, pathToSaveEPA);
+		}
+	}
+	
+	public static void saveInferredEPA(List<ExecutionResult> results, String pathToSaveEPA)
+	{
+		if (pathToSaveEPA != null /*&& !EPAUtils.currCriteriaRequireEPAXML()*/) {
+			Set<EPATrace> traces = new HashSet<EPATrace>();
+			for (ExecutionResult result: results) {
+				Set<EPATrace> resultTraces = result.getTrace().getEPATraces();
+				traces.addAll(resultTraces);
+			}
+			saveInferredEPA(traces, pathToSaveEPA);
+		}
+	}
+	
+	private static void saveInferredEPA(Set<EPATrace> traces, String pathToSaveEPA)
+	{
+		try {
+			EPA inferredAutomata = EPAFactory.buildEPA(traces);
+			EPAXMLPrinter xmlPrinter = new EPAXMLPrinter();
+			String xmlFilename = pathToSaveEPA;
+			String epa_xml_str = xmlPrinter.toXML(inferredAutomata);
+			FileIOUtils.writeFile(epa_xml_str, xmlFilename);
+			EPADotPrinter printer = new EPADotPrinter();
+			String dot_str = printer.toDot(inferredAutomata);
+			FileIOUtils.writeFile(dot_str, xmlFilename.replace(".xml", ".dot"));
+		} catch (MalformedEPATraceException e) {
+			throw new EvosuiteError(e);
+		}
+		
 	}
 	
 }

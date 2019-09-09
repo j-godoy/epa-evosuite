@@ -35,13 +35,7 @@ import org.evosuite.coverage.TestFitnessFactory;
 import org.evosuite.coverage.branch.Branch;
 import org.evosuite.coverage.branch.BranchPool;
 import org.evosuite.coverage.dataflow.DefUseCoverageSuiteFitness;
-import org.evosuite.coverage.epa.EPA;
-import org.evosuite.coverage.epa.EPADotPrinter;
-import org.evosuite.coverage.epa.EPAFactory;
-import org.evosuite.coverage.epa.EPATrace;
 import org.evosuite.coverage.epa.EPAUtils;
-import org.evosuite.coverage.epa.EPAXMLPrinter;
-import org.evosuite.coverage.epa.MalformedEPATraceException;
 import org.evosuite.ga.metaheuristics.GeneticAlgorithm;
 import org.evosuite.ga.stoppingconditions.StoppingCondition;
 import org.evosuite.junit.JUnitAnalyzer;
@@ -67,13 +61,11 @@ import org.evosuite.testcase.ConstantInliner;
 import org.evosuite.testcase.TestCase;
 import org.evosuite.testcase.TestChromosome;
 import org.evosuite.testcase.TestFitnessFunction;
-import org.evosuite.testcase.execution.EvosuiteError;
 import org.evosuite.testcase.execution.ExecutionResult;
 import org.evosuite.testcase.execution.ExecutionTraceImpl;
 import org.evosuite.testcase.execution.TestCaseExecutor;
 import org.evosuite.testsuite.*;
 import org.evosuite.utils.ArrayUtil;
-import org.evosuite.utils.FileIOUtils;
 import org.evosuite.utils.LoggingUtils;
 import org.objectweb.asm.Opcodes;
 import org.slf4j.Logger;
@@ -262,30 +254,8 @@ public class TestSuiteGenerator {
 		
 		//Debe generar el xml de la epa antes de llamar a analyzeCoverage porque pierde la instrumentación para
 		// tener los callbacks a EPAMonitor
-		if (Properties.INFERRED_EPA_XML_PATH != null && !EPAUtils.currCriteriaRequireEPAXML()) {
-			Set<EPATrace> traces = new HashSet<EPATrace>();
-			for (TestChromosome test : testSuite.getTestChromosomes()) {
-				// delete all statements leading to security exceptions
-				ExecutionResult result = test.getLastExecutionResult();
-				if (result == null) {
-					result = TestCaseExecutor.runTest(test.getTestCase());
-				}
-				Set<EPATrace> resultTraces = result.getTrace().getEPATraces();
-				traces.addAll(resultTraces);
-			}
-			try {
-				EPA inferredAutomata = EPAFactory.buildEPA(traces);
-				EPAXMLPrinter xmlPrinter = new EPAXMLPrinter();
-				String xmlFilename = Properties.INFERRED_EPA_XML_PATH;
-				String epa_xml_str = xmlPrinter.toXML(inferredAutomata);
-				FileIOUtils.writeFile(epa_xml_str, xmlFilename);
-				EPADotPrinter printer = new EPADotPrinter();
-				String dot_str = printer.toDot(inferredAutomata);
-				FileIOUtils.writeFile(dot_str, xmlFilename.replace(".xml", ".dot"));
-			} catch (MalformedEPATraceException e) {
-				throw new EvosuiteError(e);
-			}
-		}
+		if(!EPAUtils.currCriteriaRequireEPAXML())
+			EPAUtils.saveInferredEPA(testSuite, Properties.INFERRED_EPA_XML_PATH);
 
 		if (Properties.COVERAGE) {
 			ClientServices.getInstance().getClientNode().changeState(ClientState.COVERAGE_ANALYSIS);
