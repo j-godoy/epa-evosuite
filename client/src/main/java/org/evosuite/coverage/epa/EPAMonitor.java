@@ -416,6 +416,9 @@ public class EPAMonitor {
 				final EPAState currentEpaState = getCurrentState(calleeObject);
 				final EPATransition transition;
 				if (exceptionToBeThrown == null) {
+					if(!Properties.ALLOWS_ACTION_VIOLATES_PRE && !EPAUtils.isActionEnabledInInferredState(actionName, previousEpaState)) {
+						return;
+					}
 					transition = new EPANormalTransition(previousEpaState, actionName, currentEpaState);
 				} else {
 					String exceptionClassName = exceptionToBeThrown.getClass().getName();

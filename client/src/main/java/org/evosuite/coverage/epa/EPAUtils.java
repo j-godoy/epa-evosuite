@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -351,5 +352,54 @@ public class EPAUtils {
 		}
 		
 	}
+
+	public static boolean isActionEnabledInInferredState(String actionName, EPAState currentEpaState) {
+		List<String> actions = getActionNamesFromStateName(currentEpaState.getName());
+		if (actions.size() == 0)
+			throw new EvosuiteError("EpaSate " + currentEpaState + " does not contains actions names. Only inferred states contains actions in epa states");
+		if(actions.size() == 1) // state with constructor only
+			return true;
+		for (String action : actions) {
+			String extractedAction = action.split("=")[0];
+			if(!extractedAction.equals(actionName))
+				continue;
+			return action.contains("true");
+		}
+		return false;
+	}
+	
+	private static List<String> getActionNamesFromStateName(String epaStateName) {
+		epaStateName = epaStateName.replaceAll("\\[", "").replaceAll("\\]", "");
+	    List<String> actionNames = new ArrayList<>();
+
+	    boolean insideParens = false;
+	    int start = 0;
+	    for (int i = 0; i < epaStateName.length(); i++) {
+
+	      if (epaStateName.charAt(i) == '(') {
+	        insideParens = true;
+	      }
+
+	      if (epaStateName.charAt(i) == ')') {
+	        insideParens = false;
+	      }
+
+	      if (epaStateName.charAt(i) == ',' && !insideParens) {
+	        final String name = epaStateName.substring(start, i).trim();
+	        start = i + 1;
+
+	        if (!name.isEmpty()) {
+	          actionNames.add(name);
+	        }
+	      }
+	    }
+
+	    final String name = epaStateName.substring(start, epaStateName.length()).trim();
+	    if (!name.isEmpty()) {
+	      actionNames.add(name);
+	    }
+
+	    return actionNames;
+	  }
 	
 }
