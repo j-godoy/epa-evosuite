@@ -87,7 +87,7 @@ public abstract class EPASuiteFitness extends TestSuiteFitnessFunction {
 						|| !EPAUtils.getEpaActionConstructors(actionName, clazz).isEmpty();
 				if (!found) {
 					throw new EvosuiteError(
-							"EPA Action Name " + actionName + "was not found in target class " + className);
+							"EPA Action Name '" + actionName + "' was not found in target class " + className);
 				}
 			}
 		} catch (ClassNotFoundException e) {
