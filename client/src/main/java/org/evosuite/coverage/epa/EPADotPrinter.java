@@ -138,7 +138,7 @@ public class EPADotPrinter {
 	 * @return
 	 */
 	private static String escapeStateId(String stateId) {
-		return stateId.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("=", "").replaceAll(",", "_").replaceAll("\\(", "_").replaceAll("\\)", "_");
+		return stateId.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("=", "").replaceAll("true,", "true_").replaceAll("false,", "false_").replaceAll(",", "").replaceAll("\\(", "").replaceAll("\\)", "");
 	}
 
 	public static void main(String[] args) {
