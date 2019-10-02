@@ -369,37 +369,38 @@ public class EPAUtils {
 	}
 	
 	private static List<String> getActionNamesFromStateName(String epaStateName) {
-		epaStateName = epaStateName.replaceAll("\\[", "").replaceAll("\\]", "");
-	    List<String> actionNames = new ArrayList<>();
+		if(epaStateName.startsWith("["))
+			epaStateName = epaStateName.substring(1);
+		if(epaStateName.endsWith("]"))
+			epaStateName = epaStateName.substring(0, epaStateName.length()-1);
 
-	    boolean insideParens = false;
-	    int start = 0;
-	    for (int i = 0; i < epaStateName.length(); i++) {
+		List<String> actionNames = new ArrayList<>();
+		boolean insideParens = false;
+		int start = 0;
+		for (int i = 0; i < epaStateName.length(); i++) {
 
-	      if (epaStateName.charAt(i) == '(') {
-	        insideParens = true;
-	      }
+			if (epaStateName.charAt(i) == '(') {
+				insideParens = true;
+			}
+			if (epaStateName.charAt(i) == ')') {
+				insideParens = false;
+			}
+			if (epaStateName.charAt(i) == ',' && !insideParens) {
+				final String name = epaStateName.substring(start, i).trim();
+				start = i + 1;
 
-	      if (epaStateName.charAt(i) == ')') {
-	        insideParens = false;
-	      }
+				if (!name.isEmpty()) {
+					actionNames.add(name);
+				}
+			}
+		}
 
-	      if (epaStateName.charAt(i) == ',' && !insideParens) {
-	        final String name = epaStateName.substring(start, i).trim();
-	        start = i + 1;
+		final String name = epaStateName.substring(start).trim();
+		if (!name.isEmpty()) {
+			actionNames.add(name);
+		}
 
-	        if (!name.isEmpty()) {
-	          actionNames.add(name);
-	        }
-	      }
-	    }
-
-	    final String name = epaStateName.substring(start, epaStateName.length()).trim();
-	    if (!name.isEmpty()) {
-	      actionNames.add(name);
-	    }
-
-	    return actionNames;
-	  }
+		return actionNames;
+	}
 	
 }
