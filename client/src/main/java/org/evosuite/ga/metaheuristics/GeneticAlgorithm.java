@@ -21,12 +21,9 @@ package org.evosuite.ga.metaheuristics;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import org.evosuite.Properties;
 import org.evosuite.Properties.Algorithm;
@@ -929,7 +926,15 @@ public abstract class GeneticAlgorithm<T extends Chromosome> implements SearchAl
 		if(archive == null)
 			return;
 
+		long before = System.currentTimeMillis();
+		System.out.println("starting mergesolution... " + LocalDateTime.now());
+
 		T best = archive.createMergedSolution(getBestIndividual());
+
+		long after = System.currentTimeMillis();
+		long dif = after - before;
+		logger.warn("createMergedSolution took " + (dif/1000) + " seconds");
+		System.out.println("finishing mergesolution... " + LocalDateTime.now());
 
 		// The archive may contain tests evaluated with a fitness function
 		// that is not part of the optimization (e.g. ibranch secondary objective)

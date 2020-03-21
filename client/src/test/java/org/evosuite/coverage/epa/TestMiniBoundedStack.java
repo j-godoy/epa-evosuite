@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.examples.with.different.packagename.epa.MiniBoundedStack;
+import com.examples.with.different.packagename.epa.MiniBoundedStack_0;
 
 public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 
@@ -53,7 +53,7 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testExceptionalPush() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPATRANSITION };
 		Properties.TEST_ARCHIVE = false;
@@ -93,7 +93,7 @@ public class TestMiniBoundedStack extends TestEPATransitionCoverage {
 	@Test
 	public void testExceptionalPop() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPATRANSITION };
 		Properties.TEST_ARCHIVE = false;

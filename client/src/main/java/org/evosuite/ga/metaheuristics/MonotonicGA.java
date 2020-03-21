@@ -19,6 +19,7 @@
  */
 package org.evosuite.ga.metaheuristics;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -239,9 +240,11 @@ public class MonotonicGA<T extends Chromosome> extends GeneticAlgorithm<T> {
 			// related to Properties.ENABLE_SECONDARY_OBJECTIVE_AFTER;
 			// check the budget progress and activate a secondary criterion
 			// according to the property value.
-
+			System.out.println();System.out.println();
+			System.out.println("MonotonicGA 243 - enter While - generateSolution(): " + LocalDateTime.now());
 			{
 				double bestFitnessBeforeEvolution = getBestFitness();
+				System.out.println("MonotonicGA 243 - before evolve(): " + LocalDateTime.now());
 				evolve();
 				sortPopulation();
 				double bestFitnessAfterEvolution = getBestFitness();
@@ -255,7 +258,7 @@ public class MonotonicGA<T extends Chromosome> extends GeneticAlgorithm<T> {
 							+ DELTA)) : "best fitness before evolve()/sortPopulation() was: " + bestFitnessBeforeEvolution
 									+ ", now best fitness is " + bestFitnessAfterEvolution;
 			}
-
+			System.out.println("MonotonicGA 260 - before applyLocalSearch - generateSolution(): " + LocalDateTime.now());
 			{
 				double bestFitnessBeforeLocalSearch = getBestFitness();
 				applyLocalSearch();

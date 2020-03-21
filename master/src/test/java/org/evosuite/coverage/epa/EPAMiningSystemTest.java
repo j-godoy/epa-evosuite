@@ -5,13 +5,10 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.evosuite.EvoSuite;
 import org.evosuite.Properties;
 import org.evosuite.SystemTestBase;
@@ -21,7 +18,6 @@ import org.evosuite.ga.metaheuristics.GeneticAlgorithm;
 import org.evosuite.testcase.TestCase;
 import org.evosuite.testcase.TestChromosome;
 import org.evosuite.testcase.execution.ExecutionResult;
-import org.evosuite.testcase.execution.ExecutionTracer;
 import org.evosuite.testcase.execution.TestCaseExecutor;
 import org.evosuite.testsuite.TestSuiteChromosome;
 import org.junit.Assert;
@@ -30,7 +26,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.examples.with.different.packagename.epa.BoundedStack;
-import com.examples.with.different.packagename.epa.MiniBoundedStack;
+import com.examples.with.different.packagename.epa.MiniBoundedStack_0;
 
 public class EPAMiningSystemTest extends SystemTestBase {
 
@@ -60,7 +56,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.CLIENT_ON_THREAD = true;
 
 		// check test case
-		final String targetClass = MiniBoundedStack.class.getCanonicalName();
+		final String targetClass = MiniBoundedStack_0.class.getCanonicalName();
 		Properties.TARGET_CLASS = targetClass;
 
 		final EvoSuite evoSuite = new EvoSuite();
@@ -181,7 +177,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.CLIENT_ON_THREAD = true;
 		Properties.ASSERTIONS = false;
 
-		final String targetClass = MiniBoundedStack.class.getCanonicalName();
+		final String targetClass = MiniBoundedStack_0.class.getCanonicalName();
 
 		EPA inferredAutomata = inferAutomata(targetClass);
 
@@ -211,7 +207,7 @@ public class EPAMiningSystemTest extends SystemTestBase {
 		Properties.ASSERTIONS = false;
 		Properties.INFERRED_EPA_XML_PATH = "inferred_bounded_stack.xml";
 
-		final String targetClass = MiniBoundedStack.class.getCanonicalName();
+		final String targetClass = MiniBoundedStack_0.class.getCanonicalName();
 		EPA inferredAutomata = inferAutomata(targetClass);
 		assertNotNull(inferredAutomata);
 

@@ -119,11 +119,11 @@ public abstract class EPAFactory {
 		Map<EPAState, Set<EPATransition>> leadsToMap = new HashMap<EPAState, Set<EPATransition>>();
 		EPAState initialState = EPAState.INITIAL_STATE;
 		for (EPATrace trace : traces) {
-			if (!trace.getEpaTransitions().isEmpty()) {
+			/*if (!trace.getEpaTransiti*//*ons().isEmpty()) {
 				if (!trace.getFirstState().equals(EPAState.INITIAL_STATE)) {
 					throw new MalformedEPATraceException("Trace does not start in initial state");
 				}
-			}
+			}*/
 			for (EPATransition transition : trace.getEpaTransitions()) {
 				if (transition.getDestinationState().equals(EPAState.INVALID_OBJECT_STATE)) {
 					// discard rest of current trace

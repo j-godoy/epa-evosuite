@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.examples.with.different.packagename.epa.MiniBoundedStack;
+import com.examples.with.different.packagename.epa.MiniBoundedStack_0;
 
 public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 
@@ -50,7 +50,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -71,7 +71,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_1() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -92,7 +92,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_2() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -113,7 +113,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_3() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -134,7 +134,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_4() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -155,7 +155,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_5() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -215,7 +215,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_6() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;
@@ -236,7 +236,7 @@ public class TestEPAAdjacentEdgesCoverage extends TestEPATransitionCoverage {
 	@Test
 	public void testCoverage_7() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
 			IOException, SAXException, ParserConfigurationException {
-		Properties.TARGET_CLASS = MiniBoundedStack.class.getName();
+		Properties.TARGET_CLASS = MiniBoundedStack_0.class.getName();
 		Properties.EPA_XML_PATH = MINI_BOUNDED_STACK_EPA_XML;
 		Properties.CRITERION = new Properties.Criterion[] { Criterion.EPAADJACENTEDGES };
 		Properties.TEST_ARCHIVE = false;

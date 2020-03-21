@@ -73,6 +73,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -134,14 +135,24 @@ public class TestSuiteGenerator {
 		if (Properties.getTargetClass() == null)
 			return TestGenerationResultBuilder.buildErrorResult("Could not load target class");
 
+		long initgenerateTests = System.currentTimeMillis();
+		System.out.println("generateTests(): " + LocalDateTime.now());
 		TestSuiteChromosome testCases = generateTests();
+		long endgenerateTests = System.currentTimeMillis() - initgenerateTests;
+		System.out.println("TestSuiteGenerator: seconds in generate tests = "+ endgenerateTests/1000);
 
+		System.out.println("postProcessTests(): " + LocalDateTime.now());
 		postProcessTests(testCases);
 		ClientServices.getInstance().getClientNode().publishPermissionStatistics();
 		PermissionStatistics.getInstance().printStatistics(LoggingUtils.getEvoLogger());
 
+		initgenerateTests = System.currentTimeMillis();
 		// progressMonitor.setCurrentPhase("Writing JUnit test cases");
+		System.out.println("writeJUnitTestsAndCreateResult(): " + LocalDateTime.now());
 		TestGenerationResult result = writeJUnitTestsAndCreateResult(testCases);
+		System.out.println("end writeJUnitTestsAndCreateResult(): " + LocalDateTime.now());
+		endgenerateTests = System.currentTimeMillis() - initgenerateTests;
+		System.out.println("TestSuiteGenerator: seconds in writeJUnitTestsAndCreateResult = "+ endgenerateTests/1000);
 
 		TestCaseExecutor.pullDown();
 		/*
@@ -457,7 +468,10 @@ public class TestSuiteGenerator {
 			TestCaseExecutor.getInstance().addObserver(checker);
 		}
 
+		System.out.println("TestsuiteGenerator 471 - getTestGenerationStrategy(): " + LocalDateTime.now());
 		TestGenerationStrategy strategy = getTestGenerationStrategy();
+
+		System.out.println("TestsuiteGenerator 474 - generateTests(): " + LocalDateTime.now());
 		TestSuiteChromosome testSuite = strategy.generateTests();
 
 		if (Properties.CHECK_CONTRACTS) {

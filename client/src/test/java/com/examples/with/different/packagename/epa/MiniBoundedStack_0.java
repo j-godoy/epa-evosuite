@@ -3,7 +3,7 @@ package com.examples.with.different.packagename.epa;
 import org.evosuite.epa.EpaAction;
 import org.evosuite.epa.EpaState;
 
-public class MiniBoundedStack {
+public class MiniBoundedStack_0 {
 
 	private final static int DEFAULT_SIZE = 1;
 
@@ -12,7 +12,7 @@ public class MiniBoundedStack {
 	private int index = -1;
 
 	@EpaAction(name = "MyBoundedStack()")
-	public MiniBoundedStack() {
+	public MiniBoundedStack_0() {
 	}
 
 	@EpaAction(name = "push()")

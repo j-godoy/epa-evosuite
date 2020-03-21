@@ -38,6 +38,7 @@ import org.evosuite.utils.ArrayUtil;
 import org.evosuite.utils.LoggingUtils;
 import org.evosuite.utils.Randomness;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,10 +125,14 @@ public class WholeTestSuiteStrategy extends TestGenerationStrategy {
 			LoggingUtils.getEvoLogger().info("* Starting evolution");
 			ClientServices.getInstance().getClientNode().changeState(ClientState.SEARCH);
 
+			System.out.println("init WholeTestSuiteStrategy 128 - generateSolution(): " + LocalDateTime.now());
 			algorithm.generateSolution();
+			System.out.println("end WholeTestSuiteStrategy 128 - generateSolution(): " + LocalDateTime.now());
 			// TODO: Refactor MOO!
 			// bestSuites = (List<TestSuiteChromosome>) ga.getBestIndividuals();
+			System.out.println("init WholeTestSuiteStrategy 133 - getBestIndividual(): " + LocalDateTime.now());
 			testSuite = (TestSuiteChromosome) algorithm.getBestIndividual();
+			System.out.println("end WholeTestSuiteStrategy 135 - getBestIndividual(): " + LocalDateTime.now());
 		} else {
 			zeroFitness.setFinished();
 			testSuite = new TestSuiteChromosome();
