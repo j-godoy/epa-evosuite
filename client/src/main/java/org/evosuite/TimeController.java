@@ -264,6 +264,11 @@ public class TimeController {
 			return true;
 		}
 
+		//Hack: dont stop if tests are been writing
+		if(state.equals(ClientState.WRITING_STATISTICS) || state.equals(ClientState.WRITING_TESTS)){
+			return true;
+		}
+
 		//all time values are in milliseconds
 		long left = getLeftTimeBeforeEnd();
 
@@ -315,7 +320,11 @@ public class TimeController {
 		return phaseTimeouts.get(state);
 	}
 
-	private boolean currentPhaseHasTimeout() {		
-		return phaseTimeouts.containsKey(state);
+	private boolean currentPhaseHasTimeout() {
+		//Hack: dont stop if tests are been writing
+		if(state.equals(ClientState.WRITING_STATISTICS) || state.equals(ClientState.WRITING_TESTS)){
+			return false;
+		}
+    	return phaseTimeouts.containsKey(state);
 	}
 }
