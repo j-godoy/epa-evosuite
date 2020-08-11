@@ -8,3 +8,6 @@ EVOSUITE test generator extension for EPA Coverage.
 # Instructions
 1) git clone https://github.com/j-godoy/epa-evosuite.git
 2) In epa-evosuite folder, run "mvn clean install -DskipTests=true"
+
+# Use case
+You can find a benchmark (with subjects and results) that uses this epa-evosuite implementation in https://github.com/j-godoy/epa-benchmark. 
