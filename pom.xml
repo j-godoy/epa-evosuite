@@ -410,7 +410,7 @@
             </snapshots>
             <id>EvoSuite</id>
             <name>EvoSuite Repository</name>
-            <url>http://www.evosuite.org/m2/</url>
+            <url>https://www.evosuite.org/m2/</url>
             <layout>default</layout>
         </repository>
 
